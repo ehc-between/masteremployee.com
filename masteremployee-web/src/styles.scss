@@ -1,0 +1,188 @@
+:root {
+  --navy-950: #05091a;
+  --navy-900: #0b1730;
+  --navy-800: #0f1f42;
+  --navy-700: #172a54;
+  --navy-600: #1f3668;
+  --ink: #e7ecf6;
+  --ink-muted: #9aa7c2;
+  --ink-dim: #6e7a95;
+  --accent: #4df0c6;
+  --accent-2: #5aa8ff;
+  --accent-3: #b79cff;
+  --surface: #0e1a36;
+  --surface-2: #132243;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --gradient-accent: linear-gradient(135deg, #4df0c6 0%, #5aa8ff 55%, #b79cff 100%);
+  --gradient-hero: radial-gradient(1200px 600px at 15% -10%, rgba(77, 240, 198, 0.18), transparent 60%),
+                   radial-gradient(1000px 500px at 85% 10%, rgba(90, 168, 255, 0.20), transparent 60%),
+                   radial-gradient(900px 500px at 50% 120%, rgba(183, 156, 255, 0.18), transparent 60%);
+  --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 0 1px rgba(77, 240, 198, 0.35), 0 20px 60px rgba(77, 240, 198, 0.18);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --container: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--navy-950);
+  color: var(--ink);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 0.5em;
+}
+
+h1 { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.05; }
+h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); line-height: 1.15; }
+h3 { font-size: 1.25rem; line-height: 1.3; }
+
+p {
+  margin: 0 0 1em;
+  color: var(--ink-muted);
+}
+
+a {
+  color: var(--accent-2);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: var(--accent);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+section {
+  padding: clamp(64px, 9vw, 120px) 0;
+  position: relative;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(77, 240, 198, 0.08);
+  border: 1px solid rgba(77, 240, 198, 0.25);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--gradient-accent);
+  color: #05091a;
+  box-shadow: 0 10px 30px rgba(77, 240, 198, 0.25);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(77, 240, 198, 0.35);
+  color: #05091a;
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  border: 1px solid var(--border-strong);
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ink);
+}
+
+.gradient-text {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.section-head {
+  max-width: 780px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+.section-head p {
+  font-size: 1.1rem;
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 700px) {
+  .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1000px) {
+  .grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid.cols-6 { grid-template-columns: repeat(6, 1fr); }
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+.card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  background: var(--surface-2);
+}
+
+::selection {
+  background: rgba(77, 240, 198, 0.4);
+  color: #05091a;
+}
