@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { HeaderComponent } from './components/header.component';
 import { TestimonialsComponent } from './components/testimonials.component';
 import { ContactFormComponent } from './components/contact-form.component';
@@ -14,4 +14,5 @@ import { I18nService } from './i18n/i18n.service';
 export class App {
   readonly i18n = inject(I18nService);
   readonly year = new Date().getFullYear();
+  readonly activeTab = signal<string>('sales');
 }

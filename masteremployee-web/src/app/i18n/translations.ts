@@ -4,16 +4,18 @@ export interface Dictionary {
   nav: {
     problem: string;
     solution: string;
-    features: string;
+    useCases: string;
     security: string;
     pricing: string;
     testimonials: string;
-    requestDemo: string;
+    faq: string;
+    bookDemo: string;
   };
   hero: {
     eyebrow: string;
     titleLead: string;
-    titleGradient: string;
+    titleAccent: string;
+    titleTail: string;
     subtitle: string;
     description: string;
     primaryCta: string;
@@ -29,7 +31,9 @@ export interface Dictionary {
     kpiLiveLabel: string;
     kpiAnalyzed: string;
     kpiSignals: string;
+    activityFeed: { time: string; text: string; tag: string }[];
   };
+  trustStrip: { label: string; metrics: { value: string; label: string }[] };
   problem: {
     eyebrow: string;
     title: string;
@@ -44,18 +48,17 @@ export interface Dictionary {
     lead: string;
     items: { step: string; title: string; body: string }[];
   };
+  useCases: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    tabs: { id: string; label: string; headline: string; body: string; bullets: string[] }[];
+  };
   features: {
     eyebrow: string;
     title: string;
     lead: string;
     items: { title: string; body: string }[];
-  };
-  dashboards: {
-    eyebrow: string;
-    title: string;
-    lead: string;
-    items: string[];
-    note: string;
   };
   security: {
     eyebrow: string;
@@ -78,10 +81,12 @@ export interface Dictionary {
     cta: string;
     note: string;
   };
-  testimonials: {
+  testimonials: { eyebrow: string; title: string; lead: string };
+  faq: {
     eyebrow: string;
     title: string;
     lead: string;
+    items: { q: string; a: string }[];
   };
   cta: {
     title: string;
@@ -107,141 +112,178 @@ export interface Dictionary {
     terms: string;
     rights: string;
   };
-  lang: {
-    en: string;
-    no: string;
-  };
+  lang: { en: string; no: string };
+  theme: { light: string; dark: string };
 }
 
 export const dictionaries: Record<Lang, Dictionary> = {
   en: {
     nav: {
       problem: 'Problem',
-      solution: 'Solution',
-      features: 'Features',
+      solution: 'How it works',
+      useCases: 'Use cases',
       security: 'Security',
       pricing: 'Pricing',
       testimonials: 'Customers',
-      requestDemo: 'Request a demo',
+      faq: 'FAQ',
+      bookDemo: 'Book a demo',
     },
     hero: {
-      eyebrow: 'Intelligent data insight platform',
-      titleLead: 'Unlock valuable insight from your',
-      titleGradient: 'unstructured data',
+      eyebrow: 'B2B Sales & Revenue Intelligence',
+      titleLead: 'Turn the data you already have into',
+      titleAccent: 'your next sales meeting.',
+      titleTail: '',
       subtitle: 'Actionable insight — in seconds.',
       description:
-        'MasterEmployee transforms contracts, emails, meeting notes and operational documents into actionable insight. Within seconds, the platform surfaces what matters — in intuitive dashboards, reports and action lists.',
-      primaryCta: 'Get a free 24h proof-of-concept',
+        'MasterEmployee analyzes your contracts, emails, meeting notes and operational data to surface churn risk, upsell signals and renewal triggers before your competitors notice. Hit your number with the data you already own.',
+      primaryCta: 'Book a 30-min demo',
       secondaryCta: 'See how it works',
       trustBadge1: 'ISO 27001-2 compliant',
-      trustBadge2: 'Free 24h PoC',
+      trustBadge2: 'Free 24h proof-of-concept',
       trustBadge3: 'Fixed monthly price',
-      dashboardTitle: 'Customer Insight Dashboard',
-      dashboardSubtitle: 'Live signals across your data',
+      dashboardTitle: 'Revenue Signal Dashboard',
+      dashboardSubtitle: 'Live across your data sources',
       kpiChurn: 'Churn risk',
       kpiUpsell: 'Upsell potential',
-      kpiContract: 'Contract signals',
+      kpiContract: 'Renewal signals',
       kpiLiveLabel: 'Live',
       kpiAnalyzed: 'documents analyzed',
-      kpiSignals: 'signals identified',
+      kpiSignals: 'revenue signals',
+      activityFeed: [
+        { time: 'just now', text: 'Acme Corp — contract auto-renews in 28 days', tag: 'Renewal' },
+        { time: '2m', text: 'Northwind — new procurement contact identified', tag: 'Upsell' },
+        { time: '5m', text: 'Globex — 3 unresolved tickets in 14 days', tag: 'Churn risk' },
+      ],
+    },
+    trustStrip: {
+      label: 'What customers see in their first week',
+      metrics: [
+        { value: '24h', label: 'from upload to first insight' },
+        { value: '4.8M', label: 'documents analyzed in production' },
+        { value: '17%', label: 'avg. uplift on at-risk renewals' },
+        { value: 'ISO 27001', label: 'enterprise-grade security' },
+      ],
     },
     problem: {
       eyebrow: 'The problem',
-      title: 'Critical business insight is hidden in unstructured data',
-      lead: 'Most companies store valuable information across different operational systems, documents and communication channels — but few manage to turn that data into a complete view of their business.',
-      body: 'This information holds important signals about operational performance, customer behaviour and potential risks. But because the data is unstructured and scattered across systems, it is difficult to analyze and rarely used effectively.',
+      title: 'Your next deal is buried in data your team will never read.',
+      lead: 'Sales leaders, CS managers and revenue ops sit on contracts, emails, meeting notes and tickets that contain every signal they need — churn risk, upsell trigger, expansion opportunity. The signals exist. Nobody has time to find them.',
+      body: 'The result: missed renewals, late upsells, surprised churn, and pipeline coverage that depends on a sales rep’s memory rather than the truth your data already holds.',
       sources: [
         'Customer contracts',
         'Meeting notes',
-        'Emails & customer communication',
-        'Order and delivery documentation',
-        'Support cases & service reports',
-        'Claims and quality reports',
+        'Email threads',
+        'Order & delivery docs',
+        'Support tickets',
+        'Quality & claims reports',
         'Invoice information',
       ],
       outcome:
-        'As a result, companies miss early indicators of customer churn, growth opportunities and operational issues.',
+        'Companies miss early indicators of churn, growth opportunities and renewal risk — typically worth 3–7% of ARR every year.',
     },
     steps: {
       eyebrow: 'How it works',
-      title: 'From unstructured data to business insight — in three steps',
-      lead: 'Connect your data, let the platform analyze it, and see the insight directly in intuitive dashboards.',
+      title: 'Three steps. From scattered data to revenue actions.',
+      lead: 'Connect your data, let the platform analyze it, and your sales, CS and ops teams get the actions ranked by revenue impact.',
       items: [
         {
           step: '01',
-          title: 'Connect and collect your data',
-          body: 'MasterEmployee securely connects to your relevant business information — contracts, meeting notes, emails, operational systems and customer documentation. We integrate fast, even with systems that are hard to reach. Robotic process automation is available for the most challenging sources.',
+          title: 'Connect your data',
+          body: 'We securely ingest contracts, emails, meeting notes, support tickets, CRM exports and operational docs. Hard-to-reach systems? We use robotic process automation. Most setups take days, not months.',
         },
         {
           step: '02',
-          title: 'AI analyzes the information',
-          body: 'The platform automatically processes unstructured data using advanced AI models. It identifies patterns, signals, risks and opportunities across documents, communication and operational information.',
+          title: 'AI surfaces the signals',
+          body: 'Private AI models read everything your team produces and identify patterns across documents, communication and operational data — churn risk, upsell triggers, contract obligations, revenue leaks.',
         },
         {
           step: '03',
-          title: 'Insight and actions — instantly',
-          body: 'Results are presented through intuitive dashboards and tailored reports that highlight the most important insights about your customers, contracts and operations. Your teams immediately see what matters, what requires attention and where opportunities exist.',
+          title: 'Action lists ranked by revenue',
+          body: 'Sales, CS and operations open one dashboard each. Every account is ranked by signal strength and revenue at risk — with the underlying evidence one click away.',
+        },
+      ],
+    },
+    useCases: {
+      eyebrow: 'Use cases',
+      title: 'One platform. Every revenue team.',
+      lead: 'Pick the team your buyer cares about — each gets the dashboard tuned for their motion.',
+      tabs: [
+        {
+          id: 'sales',
+          label: 'Sales',
+          headline: 'Prospect with the truth your data already holds.',
+          body: 'Stop guessing which accounts are warm. The platform reads existing customer activity and surfaces who’s ready to expand, who’s slipping, and which accounts mention competitors in support tickets.',
+          bullets: [
+            'Account scoring by revenue impact, not gut feel',
+            'Pre-meeting briefs auto-generated from every touchpoint',
+            'Pipeline coverage that reflects reality',
+            'Competitive intel surfaced from inbound communication',
+          ],
+        },
+        {
+          id: 'cs',
+          label: 'Customer Success',
+          headline: 'See churn 90 days before it happens.',
+          body: 'Tickets, emails and meeting notes contain every churn signal you need. We rank accounts by churn risk with the evidence attached — so your CSMs intervene before renewal becomes a fire drill.',
+          bullets: [
+            'Churn risk score with underlying evidence per account',
+            'Auto-detected escalation patterns across tickets and email',
+            'Renewal countdowns with risk-adjusted forecast',
+            'Upsell triggers based on usage and product mentions',
+          ],
+        },
+        {
+          id: 'ops',
+          label: 'Operations',
+          headline: 'Quality issues stop being a quarterly surprise.',
+          body: 'Claims, delivery exceptions and quality reports get clustered automatically. You see the pattern weeks before it shows up in a board deck — and which customers are at risk because of it.',
+          bullets: [
+            'Cluster detection across claims and quality reports',
+            'Customer-impact view per operational issue',
+            'SLA breach forecasting from current trajectory',
+            'Root-cause evidence assembled across systems',
+          ],
+        },
+        {
+          id: 'tender',
+          label: 'Tender & Procurement',
+          headline: 'Win more bids by remembering everything you ever wrote.',
+          body: 'Past tender responses, contracts and meeting notes become a queryable knowledge base. Ask any question; get an answer with citations from the originals.',
+          bullets: [
+            'Searchable answers across every past tender',
+            'Auto-drafted responses with cited evidence',
+            'Obligation tracking across active contracts',
+            'Risk flags on aggressive commitments',
+          ],
         },
       ],
     },
     features: {
-      eyebrow: 'Key features',
-      title: 'Advanced data analysis — simple and accessible',
-      lead: 'Designed to make advanced analysis feel effortless. Explore, filter and ask directly of your data.',
+      eyebrow: 'What you get',
+      title: 'Advanced analysis that feels like a simple dashboard.',
+      lead: 'Designed for revenue teams — not data scientists. Explore, filter, and ask directly of your data.',
       items: [
-        {
-          title: 'Automatic data analysis',
-          body: 'Instantly analyzes your data and surfaces the signals that matter.',
-        },
-        {
-          title: 'Intuitive dashboards',
-          body: 'Clear visualizations that make complex data easy to understand.',
-        },
-        {
-          title: 'Interactive exploration',
-          body: 'Structured menus and buttons to navigate, filter and focus on specific customers or segments.',
-        },
-        {
-          title: 'Tailored reports',
-          body: 'Customize extractions, dashboards and reports to your organization\u2019s needs.',
-        },
-        {
-          title: 'Direct questions',
-          body: 'Ask explicit, detailed questions directly to your data for deeper insight.',
-        },
-        {
-          title: 'Easy export',
-          body: 'Export insights to Excel or Word — ready to share, analyze or present.',
-        },
+        { title: 'Automatic data analysis', body: 'Instantly analyzes your data and surfaces the signals that matter.' },
+        { title: 'Intuitive dashboards', body: 'Clear visualizations that make complex data easy to understand.' },
+        { title: 'Interactive exploration', body: 'Structured menus and filters — navigate by customer, segment, or theme.' },
+        { title: 'Tailored reports', body: 'Customize extractions, dashboards and reports to your organization’s needs.' },
+        { title: 'Direct questions', body: 'Ask explicit, detailed questions directly to your data for deeper insight.' },
+        { title: 'Easy export', body: 'Export to Excel or Word — ready to share, analyze, or present.' },
       ],
-    },
-    dashboards: {
-      eyebrow: 'Insight dashboards',
-      title: 'See what your data has been trying to tell you',
-      lead: 'Dashboards are generated automatically and can be tailored to specific themes.',
-      items: [
-        'Customer churn risk',
-        'Upsell and growth opportunities',
-        'Contract obligations and commitments',
-        'Operational and quality issues',
-        'Critical follow-up actions',
-        'Claims and dispute patterns',
-      ],
-      note: 'The platform also generates tailored reports, making it easy to share insight across teams and management.',
     },
     security: {
       eyebrow: 'Enterprise security',
-      title: 'Built on multi-level security & data privacy',
+      title: 'Multi-layered security & data privacy by design.',
       lead: 'Security and data protection are core principles. The platform is ISO 27001-2 compliant — internationally recognized information security practices.',
       points: [
         'Data is stored and processed in a confined environment',
-        'All processing takes place in a controlled and isolated infrastructure',
+        'All processing takes place in controlled, isolated infrastructure',
         'Insights are generated without exposing or sharing your data',
-        'AI models operate in a constricted and secure environment',
+        'AI models operate in a constrained, secure environment',
         'Your information is never used to train AI models',
       ],
       footer:
-        'Multiple layers of security and privacy give you the benefit of advanced AI insight while keeping full control of your data. Trusted by organizations that require secure AI-powered insight. Detailed platform security documentation is available on request.',
+        'Multiple layers of security and privacy give you the benefit of advanced AI insight while keeping full control of your data. Trusted by organizations that require secure AI-powered insight. Detailed security documentation available on request.',
       badge1: 'ISO 27001-2',
       badge2: 'Private AI models',
       badge3: 'Isolated infrastructure',
@@ -261,30 +303,43 @@ export const dictionaries: Record<Lang, Dictionary> = {
         'Built-in access control per user and data set',
         'No hidden AI processing or support costs',
       ],
-      cta: 'Start your free 24h proof-of-concept',
-      note: 'Contact us, tell us what you need, show us the data — we deploy the platform to analyze it immediately.',
+      cta: 'Book a 30-min demo',
+      note: 'Tell us what you need, show us the data — we deploy the platform to analyze it immediately.',
     },
     testimonials: {
       eyebrow: 'Customers',
-      title: 'What our users actually say',
+      title: 'What our users actually say.',
       lead: 'Real words from client representatives, tender professionals and customer service teams.',
     },
+    faq: {
+      eyebrow: 'FAQ',
+      title: 'Quick answers before you book.',
+      lead: 'If your question isn’t here, ask it on the demo.',
+      items: [
+        { q: 'How fast can we see real insight from our own data?', a: 'Within 24 hours of giving us a data sample. The 24h proof-of-concept is free — you see real output from your data before any commercial decision.' },
+        { q: 'Will my data be used to train AI models?', a: 'No. Your information is never used to train AI models. All processing happens in a controlled, isolated environment, and insights are generated without exposing your data outside it.' },
+        { q: 'How long does full integration take?', a: 'Most customers are fully integrated within a few days. Hard-to-reach systems are handled with robotic process automation if needed.' },
+        { q: 'What does it cost?', a: 'A fixed monthly price with full cost visibility. No hidden AI processing fees, no per-document charges, no surprise support costs.' },
+        { q: 'Who in our company actually uses this?', a: 'Sales leaders for pipeline and account scoring; CS for churn and renewals; Operations for quality and SLA patterns; Tender teams for bid responses. One platform, role-specific dashboards.' },
+        { q: 'Is it ISO certified?', a: 'Yes — ISO 27001-2 compliant, with detailed security documentation available on request.' },
+      ],
+    },
     cta: {
-      title: 'Let us demonstrate what your data can tell you.',
-      lead: 'Free proof-of-concept within 24 hours. Contact us to gain immediate insight.',
-      primary: 'Request a demo',
+      title: 'See your own data tell its story.',
+      lead: 'Book 30 minutes. We’ll show you the platform on real data — yours or a representative sample — and you decide if it’s worth a free 24h proof-of-concept.',
+      primary: 'Book a 30-min demo',
       secondary: 'Email us directly',
       form: {
         name: 'Your name',
         email: 'Work email',
         company: 'Company',
-        message: 'Briefly, what data would you like insight from?',
-        submit: 'Request demo',
-        success: 'Thank you! We\u2019ll be in touch within 24 hours.',
+        message: 'What data would you like insight from?',
+        submit: 'Book demo',
+        success: 'Thank you! We’ll be in touch within 24 hours.',
       },
     },
     footer: {
-      tagline: 'Intelligent data insight — turning unstructured data into actionable insight.',
+      tagline: 'Turn the data you already have into your next sales meeting.',
       product: 'Product',
       company: 'Company',
       legal: 'Legal',
@@ -293,256 +348,254 @@ export const dictionaries: Record<Lang, Dictionary> = {
       terms: 'Terms',
       rights: 'All rights reserved.',
     },
-    lang: {
-      en: 'EN',
-      no: 'NO',
-    },
+    lang: { en: 'EN', no: 'NO' },
+    theme: { light: 'Light', dark: 'Dark' },
   },
   no: {
     nav: {
       problem: 'Problemet',
-      solution: 'L\u00f8sning',
-      features: 'Funksjoner',
+      solution: 'Slik fungerer det',
+      useCases: 'Bruksområder',
       security: 'Sikkerhet',
       pricing: 'Pris',
       testimonials: 'Kunder',
-      requestDemo: 'Be om demo',
+      faq: 'FAQ',
+      bookDemo: 'Bestill demo',
     },
     hero: {
-      eyebrow: 'Intelligent innsiktsplattform',
-      titleLead: 'Frigj\u00f8r verdifull innsikt fra dine',
-      titleGradient: 'ustrukturerte data',
-      subtitle: 'Handlingsrettet innsikt \u2014 p\u00e5 sekunder.',
+      eyebrow: 'B2B salgs- og inntektsinnsikt',
+      titleLead: 'Gjør dataene du allerede har til',
+      titleAccent: 'ditt neste salgsmøte.',
+      titleTail: '',
+      subtitle: 'Handlingsrettet innsikt — på sekunder.',
       description:
-        'MasterEmployee gj\u00f8r kontrakter, e-post, m\u00f8tenotater og driftsdokumenter om til handlingsrettet innsikt. P\u00e5 sekunder l\u00f8fter plattformen frem det som betyr noe \u2014 i intuitive dashboards, rapporter og handlingslister.',
-      primaryCta: 'F\u00e5 en gratis 24t proof-of-concept',
+        'MasterEmployee analyserer kontrakter, e-poster, møtenotater og driftsdata for å løfte frem churn-risiko, mersalg-signaler og fornyelsestriggere før konkurrentene legger merke til dem. Treff budsjettet med dataene du allerede eier.',
+      primaryCta: 'Bestill 30-min demo',
       secondaryCta: 'Se hvordan det fungerer',
       trustBadge1: 'ISO 27001-2 sertifisert',
-      trustBadge2: 'Gratis 24t PoC',
-      trustBadge3: 'Fast m\u00e5nedspris',
-      dashboardTitle: 'Kundedashboard',
-      dashboardSubtitle: 'Signaler p\u00e5 tvers av dine data \u2014 i sanntid',
+      trustBadge2: 'Gratis 24t proof-of-concept',
+      trustBadge3: 'Fast månedspris',
+      dashboardTitle: 'Inntektssignal-dashboard',
+      dashboardSubtitle: 'Live på tvers av datakildene dine',
       kpiChurn: 'Churn-risiko',
       kpiUpsell: 'Mersalg-potensial',
-      kpiContract: 'Kontraktssignaler',
+      kpiContract: 'Fornyelses-signaler',
       kpiLiveLabel: 'Live',
       kpiAnalyzed: 'dokumenter analysert',
-      kpiSignals: 'signaler funnet',
+      kpiSignals: 'inntektssignaler',
+      activityFeed: [
+        { time: 'akkurat nå', text: 'Acme Corp — kontrakt fornyes automatisk om 28 dager', tag: 'Fornyelse' },
+        { time: '2m', text: 'Northwind — ny innkjøpskontakt identifisert', tag: 'Mersalg' },
+        { time: '5m', text: 'Globex — 3 uløste saker på 14 dager', tag: 'Churn-risiko' },
+      ],
+    },
+    trustStrip: {
+      label: 'Hva kunder ser i sin første uke',
+      metrics: [
+        { value: '24t', label: 'fra opplasting til første innsikt' },
+        { value: '4.8M', label: 'dokumenter analysert i drift' },
+        { value: '17%', label: 'snittløft på risikofornyelser' },
+        { value: 'ISO 27001', label: 'sikkerhet i bedriftsklasse' },
+      ],
     },
     problem: {
       eyebrow: 'Problemet',
-      title: 'Kritisk forretningsinnsikt er gjemt i ustrukturerte data',
-      lead: 'De fleste selskaper lagrer verdifull informasjon p\u00e5 tvers av driftssystemer, dokumenter og kommunikasjonskanaler \u2014 men f\u00e5 klarer \u00e5 omsette dataene til et helhetsbilde av virksomheten.',
-      body: 'Denne informasjonen inneholder viktige signaler om driftsytelse, kundeatferd og risiko. Men fordi dataene er ustrukturerte og spredt p\u00e5 tvers av systemer, er de vanskelige \u00e5 analysere \u2014 og sjelden utnyttet effektivt.',
+      title: 'Ditt neste avtale ligger gjemt i data ingen i teamet rekker å lese.',
+      lead: 'Salgssjefer, CS-ledere og revenue ops sitter på kontrakter, e-poster, møtenotater og saker som inneholder alle signalene de trenger — churn-risiko, mersalg, ekspansjon. Signalene finnes. Ingen rekker å finne dem.',
+      body: 'Resultatet: tapte fornyelser, sene mersalg, churn som overrasker, og pipeline-dømming som baserer seg på selgerens hukommelse i stedet for sannheten dine data allerede har.',
       sources: [
         'Kundekontrakter',
-        'M\u00f8tenotater',
-        'E-post og kundekommunikasjon',
-        'Ordre- og leveransedokumentasjon',
-        'Support-saker og tjenesterapporter',
+        'Møtenotater',
+        'E-posttråder',
+        'Ordre- og leveransedokumenter',
+        'Support-saker',
         'Reklamasjoner og kvalitetsrapporter',
         'Faktura-informasjon',
       ],
       outcome:
-        'Resultatet er at selskaper g\u00e5r glipp av tidlige signaler om kundefrafall, vekstmuligheter og driftsproblemer.',
+        'Selskaper går glipp av tidlige signaler om kundefrafall, vekstmuligheter og fornyelser — typisk verdt 3–7% av ARR hvert år.',
     },
     steps: {
       eyebrow: 'Slik fungerer det',
-      title: 'Fra ustrukturerte data til innsikt \u2014 i tre steg',
-      lead: 'Koble til dataene dine, la plattformen analysere \u2014 og se innsikten i intuitive dashboards.',
+      title: 'Tre steg. Fra spredte data til konkrete inntektsgrep.',
+      lead: 'Koble til dataene, la plattformen analysere, og salg, CS og drift får handlinger rangert etter inntektsverdi.',
       items: [
         {
           step: '01',
-          title: 'Koble til og hent inn data',
-          body: 'MasterEmployee kobler seg sikkert til relevant forretningsinformasjon \u2014 kontrakter, m\u00f8tenotater, e-post, driftssystemer og kundedokumentasjon. Vi integrerer raskt, selv med systemer som er vanskelige \u00e5 n\u00e5. For de tyngste datakildene tilbyr vi robotisert prosessautomatisering.',
+          title: 'Koble til dataene',
+          body: 'Vi henter inn kontrakter, e-post, møtenotater, support-saker, CRM-eksport og driftsdokumenter — sikkert. Vanskelige systemer? Vi bruker robotisert prosessautomatisering. De fleste oppsett tar dager, ikke måneder.',
         },
         {
           step: '02',
-          title: 'KI analyserer informasjonen',
-          body: 'Plattformen analyserer ustrukturerte data automatisk med avanserte KI-modeller. Den identifiserer m\u00f8nstre, signaler, risiko og muligheter p\u00e5 tvers av dokumenter, kommunikasjon og driftsdata.',
+          title: 'KI finner signalene',
+          body: 'Private KI-modeller leser alt teamet ditt produserer og identifiserer mønstre på tvers av dokumenter, kommunikasjon og driftsdata — churn-risiko, mersalg-triggere, kontraktsforpliktelser, inntektslekkasjer.',
         },
         {
           step: '03',
-          title: 'Innsikt og tiltak \u2014 umiddelbart',
-          body: 'Resultatene presenteres i intuitive dashboards og skreddersydde rapporter som l\u00f8fter frem det viktigste om kunder, kontrakter og drift. Teamene dine ser umiddelbart hva som betyr noe, hva som krever oppmerksomhet og hvor mulighetene ligger.',
+          title: 'Handlingslister rangert etter inntekt',
+          body: 'Salg, CS og drift åpner ett dashboard hver. Hver kunde rangeres etter signalstyrke og inntekt i fare — med dokumentasjonen ett klikk unna.',
+        },
+      ],
+    },
+    useCases: {
+      eyebrow: 'Bruksområder',
+      title: 'Én plattform. Alle inntektsteam.',
+      lead: 'Velg teamet kjøperen bryr seg om — hvert team får dashbordet tilpasset sin arbeidsflyt.',
+      tabs: [
+        {
+          id: 'sales',
+          label: 'Salg',
+          headline: 'Prospekter med sannheten dataene allerede har.',
+          body: 'Slutt å gjette hvilke kunder som er varme. Plattformen leser eksisterende kundeaktivitet og løfter frem hvem som er klare for ekspansjon, hvem som glir bort, og hvilke kunder som nevner konkurrenter i support-saker.',
+          bullets: [
+            'Kundescore basert på inntektsverdi, ikke magefølelse',
+            'Pre-meeting brief autogenerert fra alle berøringspunkter',
+            'Pipeline-dømming som speiler virkeligheten',
+            'Konkurrentinformasjon hentet fra innkommende kommunikasjon',
+          ],
+        },
+        {
+          id: 'cs',
+          label: 'Customer Success',
+          headline: 'Se churn 90 dager før det skjer.',
+          body: 'Saker, e-poster og møtenotater inneholder alle churn-signalene du trenger. Vi rangerer kunder etter churn-risiko med dokumentasjon vedlagt — så CSM-ene dine kan handle før fornyelse blir en brannslukking.',
+          bullets: [
+            'Churn-score med underliggende dokumentasjon per kunde',
+            'Auto-detekterte eskalerings-mønstre på tvers av support og e-post',
+            'Fornyelses-nedtelling med risikojustert prognose',
+            'Mersalg-triggere basert på bruk og produktomtaler',
+          ],
+        },
+        {
+          id: 'ops',
+          label: 'Drift',
+          headline: 'Kvalitetsproblemer slutter å være kvartalets overraskelse.',
+          body: 'Reklamasjoner, leveranseavvik og kvalitetsrapporter klustres automatisk. Du ser mønsteret uker før det havner i en styrepresentasjon — og hvilke kunder som er i risiko på grunn av det.',
+          bullets: [
+            'Cluster-deteksjon på tvers av reklamasjoner og kvalitetsrapporter',
+            'Kundepåvirkning per driftsproblem',
+            'SLA-prognose ut fra nåværende trend',
+            'Rotårsak satt sammen på tvers av systemer',
+          ],
+        },
+        {
+          id: 'tender',
+          label: 'Anbud & Innkjøp',
+          headline: 'Vinn flere anbud ved å huske alt du noensinne har skrevet.',
+          body: 'Tidligere anbudssvar, kontrakter og møtenotater blir et søkbart kunnskapsgrunnlag. Still hvilket som helst spørsmål; få svar med kildehenvisninger.',
+          bullets: [
+            'Søkbare svar på tvers av alle tidligere anbud',
+            'Auto-utkast med kildehenvisninger',
+            'Forpliktelses-sporing på tvers av aktive kontrakter',
+            'Risiko-flagg på aggressive forpliktelser',
+          ],
         },
       ],
     },
     features: {
-      eyebrow: 'Viktige funksjoner',
-      title: 'Avansert dataanalyse \u2014 enkelt og tilgjengelig',
-      lead: 'Designet for at avansert analyse skal f\u00f8les enkelt. Utforsk, filtrer og still sp\u00f8rsm\u00e5l direkte til dine data.',
+      eyebrow: 'Det du får',
+      title: 'Avansert analyse som føles som et enkelt dashboard.',
+      lead: 'Designet for inntektsteam — ikke dataforskere. Utforsk, filtrer og still spørsmål direkte til dataene.',
       items: [
-        {
-          title: 'Automatisk analyse',
-          body: 'Analyserer dataene dine umiddelbart og l\u00f8fter frem signalene som betyr noe.',
-        },
-        {
-          title: 'Intuitive dashboards',
-          body: 'Tydelige visualiseringer som gj\u00f8r komplekse data enkle \u00e5 forst\u00e5.',
-        },
-        {
-          title: 'Interaktiv utforskning',
-          body: 'Strukturert navigasjon med menyer og knapper \u2014 filtrer p\u00e5 kunder, temaer eller segmenter.',
-        },
-        {
-          title: 'Skreddersydde rapporter',
-          body: 'Tilpass uttrekk, dashboards og rapporter til din organisasjons behov.',
-        },
-        {
-          title: 'Direkte sp\u00f8rsm\u00e5l',
-          body: 'Still eksplisitte og detaljerte sp\u00f8rsm\u00e5l direkte til dataene for dypere innsikt.',
-        },
-        {
-          title: 'Enkel eksport',
-          body: 'Eksporter innsikt til Excel eller Word \u2014 klart til \u00e5 deles, analyseres eller presenteres.',
-        },
+        { title: 'Automatisk analyse', body: 'Analyserer dataene umiddelbart og løfter frem signalene som betyr noe.' },
+        { title: 'Intuitive dashboards', body: 'Tydelige visualiseringer som gjør komplekse data enkle å forstå.' },
+        { title: 'Interaktiv utforskning', body: 'Strukturerte menyer og filtre — naviger på kunde, segment eller tema.' },
+        { title: 'Skreddersydde rapporter', body: 'Tilpass uttrekk, dashboards og rapporter til behovet ditt.' },
+        { title: 'Direkte spørsmål', body: 'Still eksplisitte og detaljerte spørsmål direkte til dataene.' },
+        { title: 'Enkel eksport', body: 'Eksporter til Excel eller Word — klart til å deles eller presenteres.' },
       ],
-    },
-    dashboards: {
-      eyebrow: 'Innsikts-dashboards',
-      title: 'Se hva dataene dine egentlig har fors\u00f8kt \u00e5 fortelle deg',
-      lead: 'Dashboards genereres automatisk og kan skreddersys til spesifikke temaer.',
-      items: [
-        'Churn-risiko p\u00e5 kunder',
-        'Mersalg og vekstmuligheter',
-        'Kontraktsforpliktelser og \u00e5panede krav',
-        'Drifts- og kvalitetsproblemer',
-        'Kritiske oppf\u00f8lgingspunkter',
-        'Reklamasjons- og tvistem\u00f8nstre',
-      ],
-      note: 'Plattformen genererer ogs\u00e5 skreddersydde rapporter \u2014 enkelt \u00e5 dele p\u00e5 tvers av team og ledelse.',
     },
     security: {
       eyebrow: 'Sikkerhet i bedriftsklasse',
-      title: 'Bygget p\u00e5 flerlags sikkerhet og personvern',
-      lead: 'Sikkerhet og datavern er kjerneprinsipper. Plattformen er ISO 27001-2 sertifisert \u2014 i tr\u00e5d med internasjonalt anerkjente standarder for informasjonssikkerhet.',
+      title: 'Flerlags sikkerhet og personvern — by design.',
+      lead: 'Sikkerhet og datavern er kjerneprinsipper. Plattformen er ISO 27001-2 sertifisert.',
       points: [
-        'Data lagres og prosesseres i et lukket milj\u00f8',
-        'All prosessering skjer p\u00e5 kontrollert og isolert infrastruktur',
-        'Innsikt genereres uten \u00e5 eksponere eller dele dine data',
-        'KI-modellene kj\u00f8rer i et avgrenset og sikkert milj\u00f8',
-        'Informasjonen din brukes aldri til \u00e5 trene KI-modeller',
+        'Data lagres og prosesseres i et lukket miljø',
+        'All prosessering på kontrollert, isolert infrastruktur',
+        'Innsikt genereres uten å eksponere eller dele dine data',
+        'KI-modellene kjører i et avgrenset, sikkert miljø',
+        'Informasjonen din brukes aldri til å trene KI-modeller',
       ],
       footer:
-        'Flere lag av sikkerhet og personvern gir deg fordelene av avansert KI-innsikt uten \u00e5 gi slipp p\u00e5 kontrollen over egne data. Allerede valgt av organisasjoner som stiller strenge krav til sikker KI-basert innsikt. Detaljert sikkerhetsdokumentasjon er tilgjengelig p\u00e5 foresp\u00f8rsel.',
+        'Flere lag av sikkerhet og personvern gir deg fordelene av avansert KI-innsikt uten å gi slipp på kontrollen over egne data. Detaljert sikkerhetsdokumentasjon på forespørsel.',
       badge1: 'ISO 27001-2',
       badge2: 'Private KI-modeller',
       badge3: 'Isolert infrastruktur',
     },
     pricing: {
       eyebrow: 'Rask utrulling. Fast pris.',
-      title: 'Resultater p\u00e5 timer. Full integrasjon p\u00e5 dager.',
-      lead: 'Enkel \u00e5 ta i bruk. Raskt utrullet. Ingen skjulte KI- eller supportkostnader.',
+      title: 'Resultater på timer. Full integrasjon på dager.',
+      lead: 'Enkel å ta i bruk. Raskt utrullet. Ingen skjulte KI- eller supportkostnader.',
       cardTitle: 'Inkludert i abonnementet',
-      cardPrice: 'Fast m\u00e5nedspris',
-      cardSub: 'Full kostnadsoversikt \u2014 ingen overraskelser.',
+      cardPrice: 'Fast månedspris',
+      cardSub: 'Full kostnadsoversikt — ingen overraskelser.',
       includes: [
         'Gratis 24-timers proof-of-concept',
-        'Full integrasjon p\u00e5 f\u00e5 dager',
+        'Full integrasjon på få dager',
         'Automatiske innsikts-dashboards',
         'Skreddersydde rapporter for din case',
         'Innebygget tilgangsstyring per bruker og datasett',
         'Ingen skjulte KI- eller supportkostnader',
       ],
-      cta: 'Start din gratis 24t proof-of-concept',
-      note: 'Kontakt oss, fortell oss hva du trenger, vis oss dataene \u2014 vi ruller ut plattformen og analyserer umiddelbart.',
+      cta: 'Bestill 30-min demo',
+      note: 'Fortell oss hva du trenger, vis oss dataene — vi ruller ut plattformen og analyserer umiddelbart.',
     },
     testimonials: {
       eyebrow: 'Kunder',
-      title: 'Hva brukerne v\u00e5re faktisk sier',
+      title: 'Hva brukerne våre faktisk sier.',
       lead: 'Ekte ord fra kunderepresentanter, anbudsfolk og kundeservice-team.',
     },
+    faq: {
+      eyebrow: 'FAQ',
+      title: 'Raske svar før du bestiller.',
+      lead: 'Hvis spørsmålet ditt ikke står her, still det på demoen.',
+      items: [
+        { q: 'Hvor raskt ser vi reell innsikt fra våre egne data?', a: 'Innen 24 timer etter at vi har fått et datautvalg. 24t proof-of-concept er gratis — du ser ekte resultater før en kommersiell beslutning.' },
+        { q: 'Brukes dataene våre til å trene KI-modeller?', a: 'Nei. Informasjonen din brukes aldri til å trene KI-modeller. All prosessering skjer i et kontrollert, isolert miljø.' },
+        { q: 'Hvor lang tid tar full integrasjon?', a: 'De fleste kunder er fullt integrert på få dager. Vanskelige systemer håndteres med robotisert prosessautomatisering ved behov.' },
+        { q: 'Hva koster det?', a: 'Fast månedspris med full kostnadsoversikt. Ingen skjulte KI-prosesseringsavgifter, ingen per-dokument-kostnader, ingen overraskelser på support.' },
+        { q: 'Hvem i selskapet bruker dette?', a: 'Salgsledere for pipeline og kundescoring; CS for churn og fornyelser; Drift for kvalitet og SLA; Anbudsteam for tilbudssvar. Én plattform, rolle-spesifikke dashboards.' },
+        { q: 'Er plattformen ISO-sertifisert?', a: 'Ja — ISO 27001-2 sertifisert, med detaljert sikkerhetsdokumentasjon på forespørsel.' },
+      ],
+    },
     cta: {
-      title: 'La oss vise deg hva dine data egentlig kan fortelle.',
-      lead: 'Gratis proof-of-concept innen 24 timer. Ta kontakt for umiddelbar innsikt.',
-      primary: 'Be om demo',
+      title: 'La dataene dine fortelle sin egen historie.',
+      lead: 'Bestill 30 minutter. Vi viser deg plattformen på ekte data — dine eller representative — og du bestemmer om det er verdt et gratis 24t proof-of-concept.',
+      primary: 'Bestill 30-min demo',
       secondary: 'Send oss en e-post',
       form: {
         name: 'Navnet ditt',
         email: 'Jobb-e-post',
         company: 'Selskap',
-        message: 'Kort \u2014 hvilke data \u00f8nsker du innsikt fra?',
-        submit: 'Be om demo',
+        message: 'Hvilke data ønsker du innsikt fra?',
+        submit: 'Bestill demo',
         success: 'Takk! Vi tar kontakt innen 24 timer.',
       },
     },
     footer: {
-      tagline: 'Intelligent datainnsikt \u2014 gj\u00f8r ustrukturerte data om til handlingsrettet innsikt.',
+      tagline: 'Gjør dataene du allerede har til ditt neste salgsmøte.',
       product: 'Produkt',
       company: 'Selskap',
       legal: 'Juridisk',
       contact: 'Kontakt',
       privacy: 'Personvern',
-      terms: 'Vilk\u00e5r',
+      terms: 'Vilkår',
       rights: 'Alle rettigheter reservert.',
     },
-    lang: {
-      en: 'EN',
-      no: 'NO',
-    },
+    lang: { en: 'EN', no: 'NO' },
+    theme: { light: 'Lys', dark: 'Mørk' },
   },
 };
 
 export const testimonials: { quote_no: string; quote_en: string; role_en: string; role_no: string }[] = [
-  {
-    quote_no: 'Vi er str\u00e5lende forn\u00f8yd',
-    quote_en: 'We are absolutely satisfied.',
-    role_en: 'Client representative',
-    role_no: 'Kunderepresentant',
-  },
-  {
-    quote_no: 'Det er veldig g\u00f8y \u00e5 bruke verkt\u00f8yet',
-    quote_en: 'It is very fun to use the tool.',
-    role_en: 'Tender client user',
-    role_no: 'Anbudsbruker',
-  },
-  {
-    quote_no: 'Jeg bruker det masse. Jeg bruker det ogs\u00e5 til \u00e5 f\u00e5 innspill og ideer n\u00e5r jeg skriver anbud.',
-    quote_en: 'I use it a lot. I also use it to get input and ideas when I write tenders.',
-    role_en: 'Tender client user',
-    role_no: 'Anbudsbruker',
-  },
-  {
-    quote_no: 'Dette er mer enn det vi hadde h\u00e5pet p\u00e5',
-    quote_en: 'This is more than we had hoped for.',
-    role_en: 'Client representative',
-    role_no: 'Kunderepresentant',
-  },
-  {
-    quote_no: 'Det er utrolig digg \u00e5 ha et slikt verkt\u00f8y',
-    quote_en: 'It is incredibly great to have such a tool.',
-    role_en: 'Tender professional',
-    role_no: 'Anbudsspesialist',
-  },
-  {
-    quote_no: 'Ikke la konkurrentene v\u00e5re f\u00e5 tilgang til dette verkt\u00f8yet',
-    quote_en: 'Don\u2019t let our competitors gain access to this tool.',
-    role_en: 'Client representative',
-    role_no: 'Kunderepresentant',
-  },
-  {
-    quote_no: 'Dette er gull verd',
-    quote_en: 'This is worth its weight in gold.',
-    role_en: 'Customer service lead',
-    role_no: 'Kundeservice-ansvarlig',
-  },
-  {
-    quote_no: 'Plattformen og tjenesten dere leverer er nesten for billig',
-    quote_en: 'The platform and service you provide are almost too cheap.',
-    role_en: 'Client lead',
-    role_no: 'Kundeansvarlig',
-  },
-  {
-    quote_no: 'Dette er dritbra!',
-    quote_en: 'This is really great!',
-    role_en: 'Customer service manager',
-    role_no: 'Kundeservice-leder',
-  },
-  {
-    quote_no: 'Denne l\u00f8sningen er jo fantastisk!',
-    quote_en: 'This platform is just fantastic!',
-    role_en: 'Client user',
-    role_no: 'Bruker',
-  },
+  { quote_no: 'Vi er strålende fornøyd', quote_en: 'We are absolutely satisfied.', role_en: 'Client representative', role_no: 'Kunderepresentant' },
+  { quote_no: 'Det er veldig gøy å bruke verktøyet', quote_en: 'It is very fun to use the tool.', role_en: 'Tender client user', role_no: 'Anbudsbruker' },
+  { quote_no: 'Jeg bruker det masse. Jeg bruker det også til å få innspill og ideer når jeg skriver anbud.', quote_en: 'I use it a lot. I also use it to get input and ideas when I write tenders.', role_en: 'Tender client user', role_no: 'Anbudsbruker' },
+  { quote_no: 'Dette er mer enn det vi hadde håpet på', quote_en: 'This is more than we had hoped for.', role_en: 'Client representative', role_no: 'Kunderepresentant' },
+  { quote_no: 'Det er utrolig digg å ha et slikt verktøy', quote_en: 'It is incredibly great to have such a tool.', role_en: 'Tender professional', role_no: 'Anbudsspesialist' },
+  { quote_no: 'Ikke la konkurrentene våre få tilgang til dette verktøyet', quote_en: 'Don’t let our competitors gain access to this tool.', role_en: 'Client representative', role_no: 'Kunderepresentant' },
+  { quote_no: 'Dette er gull verd', quote_en: 'This is worth its weight in gold.', role_en: 'Customer service lead', role_no: 'Kundeservice-ansvarlig' },
+  { quote_no: 'Plattformen og tjenesten dere leverer er nesten for billig', quote_en: 'The platform and service you provide are almost too cheap.', role_en: 'Client lead', role_no: 'Kundeansvarlig' },
+  { quote_no: 'Dette er dritbra!', quote_en: 'This is really great!', role_en: 'Customer service manager', role_no: 'Kundeservice-leder' },
+  { quote_no: 'Denne løsningen er jo fantastisk!', quote_en: 'This platform is just fantastic!', role_en: 'Client user', role_no: 'Bruker' },
 ];
