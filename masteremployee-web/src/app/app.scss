@@ -15,8 +15,8 @@ main { padding-top: 108px; }
 .hero-bg {
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 70% 60% at 80% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%),
-    radial-gradient(ellipse 50% 50% at 0% 100%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%);
+    radial-gradient(ellipse 70% 60% at 80% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%),
+    radial-gradient(ellipse 50% 50% at 0% 100%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 60%);
   pointer-events: none;
 }
 .hero-grid {
@@ -350,7 +350,7 @@ section { padding: 96px 0; }
 /* ---------- CTA ---------- */
 .cta {
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 60%),
     var(--bg);
 }
 .cta-wrap { display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: center; }
