@@ -231,7 +231,89 @@ section {
   color: var(--ink);
 }
 
-/* Reduced motion */
+/* ----------------------------------------------------------------
+   Reveal-on-scroll
+   ---------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* ----------------------------------------------------------------
+   Ambient animations
+   ---------------------------------------------------------------- */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes orb-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(2%, 1%, 0) scale(1.04); }
+}
+@keyframes draw-line {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 6px 20px rgba(233, 96, 39, 0.22); }
+  50%      { box-shadow: 0 10px 30px rgba(233, 96, 39, 0.38); }
+}
+@keyframes nudge-right {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(3px); }
+}
+
+/* Hero dashboard: subtle float */
+.dash {
+  animation: float-y 7s ease-in-out infinite;
+}
+
+/* Background orbs drift */
+.hero-bg {
+  animation: orb-drift 18s ease-in-out infinite;
+}
+
+/* Animated chart line: stroke draws in once when visible */
+.dash-chart svg path:nth-child(2) {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: draw-line 2.6s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+}
+
+/* Primary button: gentle ongoing glow + slight arrow nudge */
+.btn-primary {
+  animation: glow-pulse 3.6s ease-in-out infinite;
+}
+.btn-primary:hover {
+  animation: none; /* hover state owns its own shadow */
+}
+.btn-primary svg {
+  animation: nudge-right 2.2s ease-in-out infinite;
+}
+.btn-primary:hover svg {
+  animation: none;
+}
+
+/* ----------------------------------------------------------------
+   Reduced motion: kill non-essential animation
+   ---------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  .dash, .hero-bg, .btn-primary, .btn-primary svg { animation: none !important; }
+  .dash-chart svg path:nth-child(2) { stroke-dasharray: none; stroke-dashoffset: 0; }
 }
