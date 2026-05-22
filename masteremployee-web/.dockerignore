@@ -7,3 +7,6 @@ dist
 .gitignore
 *.log
 README.md
+certbot
+docker-compose.yml
+init-letsencrypt.sh
