@@ -3,12 +3,23 @@
 <main id="top">
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-media" aria-hidden="true">
+      <div class="hero-photo"></div>
+      <div class="hero-scrim"></div>
+    </div>
     <div class="container hero-grid">
-      <div class="hero-copy">
-        <h1 [meReveal]="0">
-          {{ i18n.t().hero.titleLead }}
-          <span class="title-accent">{{ i18n.t().hero.titleAccent }}</span>
+      <div class="hero-copy" [style.--title-ratio]="titleFit">
+        <h1 [meReveal]="0" [meFitLines]="titleFit">
+          @for (line of i18n.t().hero.titleLines; track $index) {
+            <span class="title-line">
+              @for (seg of line; track $index; let lastSeg = $last) {
+                <span
+                  [class.title-accent]="seg.tone === 'accent'"
+                  [class.title-blue]="seg.tone === 'blue'"
+                  [class.title-plain]="!seg.tone">{{ seg.text }}</span>@if (!lastSeg) {&ngsp;}
+              }
+            </span>
+          }
         </h1>
         <p class="hero-desc" [meReveal]="120">{{ i18n.t().hero.description }}</p>
         <div class="hero-ctas" [meReveal]="220">
@@ -24,63 +35,6 @@
           <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2 4 5v7c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V5l-8-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m8.5 12 2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ i18n.t().hero.trustBadge1 }}</span>
           <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>{{ i18n.t().hero.trustBadge2 }}</span>
           <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 7h18M3 12h18M3 17h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>{{ i18n.t().hero.trustBadge3 }}</span>
-        </div>
-      </div>
-
-      <div class="hero-visual" [meReveal]="200">
-        <div class="dash">
-          <div class="dash-head">
-            <div>
-              <div class="dash-title">{{ i18n.t().hero.dashboardTitle }}</div>
-              <div class="dash-sub">{{ i18n.t().hero.dashboardSubtitle }}</div>
-            </div>
-            <span class="live"><span class="dot"></span>{{ i18n.t().hero.kpiLiveLabel }}</span>
-          </div>
-
-          <div class="dash-kpis">
-            <div class="kpi kpi-warn">
-              <div class="kpi-label">{{ i18n.t().hero.kpiChurn }}</div>
-              <div class="kpi-value">12.4%</div>
-              <div class="kpi-bar"><div style="width:42%"></div></div>
-            </div>
-            <div class="kpi kpi-pos">
-              <div class="kpi-label">{{ i18n.t().hero.kpiUpsell }}</div>
-              <div class="kpi-value">€ 1.8M</div>
-              <div class="kpi-bar"><div style="width:78%"></div></div>
-            </div>
-            <div class="kpi kpi-neutral">
-              <div class="kpi-label">{{ i18n.t().hero.kpiContract }}</div>
-              <div class="kpi-value">23 new</div>
-              <div class="kpi-bar"><div style="width:55%"></div></div>
-            </div>
-          </div>
-
-          <div class="dash-chart" aria-hidden="true">
-            <svg viewBox="0 0 400 120" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="lineGrad" x1="0" x2="1" y1="0" y2="0">
-                  <stop offset="0%" stop-color="#F47B49"/>
-                  <stop offset="100%" stop-color="#E96027"/>
-                </linearGradient>
-                <linearGradient id="fillGrad" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stop-color="#E96027" stop-opacity="0.28"/>
-                  <stop offset="100%" stop-color="#E96027" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <path d="M0,90 C40,70 70,95 110,75 C150,55 180,80 220,60 C260,40 290,70 330,45 C370,20 385,30 400,25 L400,120 L0,120 Z" fill="url(#fillGrad)"/>
-              <path d="M0,90 C40,70 70,95 110,75 C150,55 180,80 220,60 C260,40 290,70 330,45 C370,20 385,30 400,25" fill="none" stroke="url(#lineGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-          </div>
-
-          <ul class="dash-feed">
-            @for (a of i18n.t().hero.activityFeed; track a.text) {
-              <li>
-                <span class="feed-time">{{ a.time }}</span>
-                <span class="feed-text">{{ a.text }}</span>
-                <span class="feed-tag">{{ a.tag }}</span>
-              </li>
-            }
-          </ul>
         </div>
       </div>
     </div>
@@ -101,53 +55,9 @@
     </div>
   </section>
 
-  <!-- PROBLEM -->
-  <section id="problem" class="problem">
-    <div class="container">
-      <div class="section-head" [meReveal]="0">
-        <span class="eyebrow">{{ i18n.t().problem.eyebrow }}</span>
-        <h2>{{ i18n.t().problem.title }}</h2>
-        <p>{{ i18n.t().problem.lead }}</p>
-      </div>
-      <div class="problem-body">
-        <p class="problem-text" [meReveal]="80">{{ i18n.t().problem.body }}</p>
-        <div class="source-cloud">
-          @for (s of i18n.t().problem.sources; track s; let i = $index) {
-            <span class="chip" [meReveal]="160 + i * 60">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 3v6h6" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-              {{ s }}
-            </span>
-          }
-        </div>
-        <div class="problem-outcome" [meReveal]="240">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <p>{{ i18n.t().problem.outcome }}</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <app-problem></app-problem>
 
-  <!-- STEPS -->
-  <section id="solution" class="steps">
-    <div class="container">
-      <div class="section-head" [meReveal]="0">
-        <span class="eyebrow">{{ i18n.t().steps.eyebrow }}</span>
-        <h2>{{ i18n.t().steps.title }}</h2>
-        <p>{{ i18n.t().steps.lead }}</p>
-      </div>
-      <div class="grid cols-3 steps-grid">
-        @for (item of i18n.t().steps.items; track item.step; let i = $index) {
-          <article class="step-card" [meReveal]="i * 120">
-            <div class="step-num">{{ item.step }}</div>
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.body }}</p>
-          </article>
-        }
-      </div>
-    </div>
-  </section>
+  <app-steps></app-steps>
 
   <!-- USE CASES -->
   <section id="use-cases" class="use-cases">
@@ -199,18 +109,9 @@
           </div>
         }
       }
-    </div>
-  </section>
 
-  <!-- FEATURES -->
-  <section id="features" class="features">
-    <div class="container">
-      <div class="section-head" [meReveal]="0">
-        <span class="eyebrow">{{ i18n.t().features.eyebrow }}</span>
-        <h2>{{ i18n.t().features.title }}</h2>
-        <p>{{ i18n.t().features.lead }}</p>
-      </div>
-      <div class="grid cols-3 feature-grid">
+      <!-- Capability blocks, moved out of the old #features section. -->
+      <div class="grid feature-grid">
         @for (f of i18n.t().features.items; track f.title; let i = $index) {
           <article class="card feature-card" [meReveal]="i * 80">
             <div class="feature-icon">
@@ -258,37 +159,24 @@
     </div>
   </section>
 
-  <!-- PRICING -->
-  <section id="pricing" class="pricing">
-    <div class="container">
-      <div class="section-head" [meReveal]="0">
-        <span class="eyebrow">{{ i18n.t().pricing.eyebrow }}</span>
-        <h2>{{ i18n.t().pricing.title }}</h2>
-        <p>{{ i18n.t().pricing.lead }}</p>
-      </div>
-      <div class="pricing-card" [meReveal]="120">
-        <div class="pricing-head">
-          <div>
-            <div class="pricing-tag">{{ i18n.t().pricing.cardTitle }}</div>
-            <div class="pricing-price">{{ i18n.t().pricing.cardPrice }}</div>
-            <div class="pricing-sub">{{ i18n.t().pricing.cardSub }}</div>
-          </div>
-          <a href="#contact" class="btn btn-primary pricing-cta">{{ i18n.t().pricing.cta }}</a>
+  <!-- CTA -->
+  <section id="contact" class="cta">
+    <div class="container cta-wrap">
+      <div class="cta-copy" [meReveal]="0">
+        <h2>{{ i18n.t().cta.title }}</h2>
+        <p>{{ i18n.t().cta.lead }}</p>
+        <div class="cta-links">
+          <a href="mailto:contact@masteremployee.com" class="cta-mail">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2"/><path d="m2 7 10 6 10-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            contact&#64;masteremployee.com
+          </a>
         </div>
-        <ul class="pricing-list">
-          @for (item of i18n.t().pricing.includes; track item) {
-            <li>
-              <span class="tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              {{ item }}
-            </li>
-          }
-        </ul>
-        <p class="pricing-note">{{ i18n.t().pricing.note }}</p>
+      </div>
+      <div class="cta-card" [meReveal]="180">
+        <app-contact-form></app-contact-form>
       </div>
     </div>
   </section>
-
-  <app-testimonials></app-testimonials>
 
   <!-- FAQ -->
   <section id="faq" class="faq">
@@ -311,25 +199,6 @@
       </div>
     </div>
   </section>
-
-  <!-- CTA -->
-  <section id="contact" class="cta">
-    <div class="container cta-wrap">
-      <div class="cta-copy" [meReveal]="0">
-        <h2>{{ i18n.t().cta.title }}</h2>
-        <p>{{ i18n.t().cta.lead }}</p>
-        <div class="cta-links">
-          <a href="mailto:contact@masteremployee.com" class="cta-mail">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2"/><path d="m2 7 10 6 10-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            contact&#64;masteremployee.com
-          </a>
-        </div>
-      </div>
-      <div class="cta-card" [meReveal]="180">
-        <app-contact-form></app-contact-form>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer class="site-footer">
@@ -343,11 +212,9 @@
       <a href="#solution">{{ i18n.t().nav.solution }}</a>
       <a href="#use-cases">{{ i18n.t().nav.useCases }}</a>
       <a href="#security">{{ i18n.t().nav.security }}</a>
-      <a href="#pricing">{{ i18n.t().nav.pricing }}</a>
     </div>
     <div>
       <h4>{{ i18n.t().footer.company }}</h4>
-      <a href="#testimonials">{{ i18n.t().nav.testimonials }}</a>
       <a href="#contact">{{ i18n.t().footer.contact }}</a>
     </div>
     <div>

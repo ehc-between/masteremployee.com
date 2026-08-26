@@ -3,6 +3,8 @@
   --orange: #E96027;
   --orange-soft: #F47B49;
   --orange-deep: #C84B17;
+  --blue: #3E92F5;
+  --blue-soft: #79BEFF;
   --ink-900: #1A1A1A;
   --ink-800: #2B2B2B;
 
@@ -24,6 +26,11 @@
   --accent-soft-2: rgba(233, 96, 39, 0.16);
   --shadow-soft: 0 1px 2px rgba(20,20,20,.04), 0 12px 32px rgba(20,20,20,.06);
   --shadow-glow: 0 20px 60px rgba(233, 96, 39, 0.18);
+
+  /* Swap the display face here — headings, metrics and prices all read from
+     this one token. Must match the family loaded in index.html. */
+  --font-display: 'Sora', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   --radius-sm: 10px;
   --radius-md: 14px;
@@ -86,7 +93,7 @@ body[data-density="roomy"]   { --section-pad: clamp(80px, 11vw, 160px); }
 body { --section-pad: clamp(64px, 9vw, 120px); }
 
 h1, h2, h3, h4 {
-  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.022em;
   color: var(--ink);
@@ -198,6 +205,20 @@ section {
   display: inline;
 }
 
+/* Uncoloured title segment — a connector word that follows the line break and
+   must not compete with the accent that comes after it. */
+.title-plain { color: inherit; display: inline; }
+
+/* Secondary title accent — lifted toward the cool tones already in the hero
+   photo. Kept global for the same background-clip reason as .title-accent. */
+.title-blue {
+  background: linear-gradient(135deg, var(--blue), var(--blue-soft));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline;
+}
+
 .section-head {
   max-width: 760px;
   margin: 0 auto 56px;
@@ -252,17 +273,6 @@ section {
 /* ----------------------------------------------------------------
    Ambient animations
    ---------------------------------------------------------------- */
-@keyframes float-y {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
-}
-@keyframes orb-drift {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%      { transform: translate3d(2%, 1%, 0) scale(1.04); }
-}
-@keyframes draw-line {
-  to { stroke-dashoffset: 0; }
-}
 @keyframes glow-pulse {
   0%, 100% { box-shadow: 0 6px 20px rgba(233, 96, 39, 0.22); }
   50%      { box-shadow: 0 10px 30px rgba(233, 96, 39, 0.38); }
@@ -270,23 +280,6 @@ section {
 @keyframes nudge-right {
   0%, 100% { transform: translateX(0); }
   50%      { transform: translateX(3px); }
-}
-
-/* Hero dashboard: subtle float */
-.dash {
-  animation: float-y 7s ease-in-out infinite;
-}
-
-/* Background orbs drift */
-.hero-bg {
-  animation: orb-drift 18s ease-in-out infinite;
-}
-
-/* Animated chart line: stroke draws in once when visible */
-.dash-chart svg path:nth-child(2) {
-  stroke-dasharray: 800;
-  stroke-dashoffset: 800;
-  animation: draw-line 2.6s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
 }
 
 /* Primary button: gentle ongoing glow + slight arrow nudge */
@@ -315,6 +308,5 @@ section {
     transition-duration: 0.01ms !important;
   }
   .reveal { opacity: 1; transform: none; }
-  .dash, .hero-bg, .btn-primary, .btn-primary svg { animation: none !important; }
-  .dash-chart svg path:nth-child(2) { stroke-dasharray: none; stroke-dashoffset: 0; }
+  .btn-primary, .btn-primary svg { animation: none !important; }
 }

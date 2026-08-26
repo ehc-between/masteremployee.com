@@ -16,7 +16,6 @@ import { ThemeService } from '../theme.service';
           <a (click)="close()" href="#solution">{{ i18n.t().nav.solution }}</a>
           <a (click)="close()" href="#use-cases">{{ i18n.t().nav.useCases }}</a>
           <a (click)="close()" href="#security">{{ i18n.t().nav.security }}</a>
-          <a (click)="close()" href="#pricing">{{ i18n.t().nav.pricing }}</a>
           <a (click)="close()" href="#faq">{{ i18n.t().nav.faq }}</a>
         </nav>
         <div class="actions">
@@ -55,7 +54,7 @@ import { ThemeService } from '../theme.service';
     }
     .inner { display: flex; align-items: center; gap: 24px; }
     .brand { flex: 0 0 auto; display: inline-flex; align-items: center; }
-    .brand img { height: 64px; width: auto; display: block; }
+    .brand img { height: 90px; width: auto; display: block; }
     .nav { display: flex; align-items: center; gap: 26px; margin-left: 24px; flex: 1; }
     .nav a { color: var(--ink-muted); font-size: 0.9rem; font-weight: 500; }
     .nav a:hover { color: var(--ink); }
@@ -88,7 +87,7 @@ import { ThemeService } from '../theme.service';
     .hamburger span { width: 16px; height: 2px; background: var(--ink); border-radius: 2px; display: block; }
     @media (max-width: 1020px) {
       .nav {
-        position: fixed; top: 64px; left: 0; right: 0;
+        position: fixed; top: 118px; left: 0; right: 0;
         background: var(--bg); border-bottom: 1px solid var(--border);
         flex-direction: column; gap: 0; margin: 0; padding: 0 24px;
         max-height: 0; overflow: hidden; transition: max-height 0.25s ease, padding 0.25s ease;

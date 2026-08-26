@@ -6,16 +6,14 @@ export interface Dictionary {
     solution: string;
     useCases: string;
     security: string;
-    pricing: string;
-    testimonials: string;
     faq: string;
     bookDemo: string;
   };
   hero: {
     eyebrow: string;
-    titleLead: string;
-    titleAccent: string;
-    titleTail: string;
+    /* One entry per rendered line; each line is a list of styled segments.
+       `tone` selects the gradient — omit it for plain ink. */
+    titleLines: { text: string; tone?: 'accent' | 'blue' }[][];
     subtitle: string;
     description: string;
     primaryCta: string;
@@ -36,17 +34,65 @@ export interface Dictionary {
   trustStrip: { label: string; metrics: { value: string; label: string }[] };
   problem: {
     eyebrow: string;
-    title: string;
+    titleLead: string;
+    titleAccent: string;
     lead: string;
-    body: string;
-    sources: string[];
-    outcome: string;
+    emphasisLead: string;
+    emphasisStrong: string;
+    coreTitle: string;
+    coreSub: string;
+    /** Small callouts floating around the core node. */
+    hints: string[];
+    /** Seven data sources ringing the core; `icon` selects the inline SVG. */
+    sources: {
+      icon: 'contract' | 'mail' | 'support' | 'meeting' | 'claim' | 'delivery' | 'invoice';
+      title: string;
+      body: string;
+    }[];
+    missedTitle: string;
+    missedBody: string;
+    missedItems: {
+      icon: 'churn' | 'revenue' | 'ops' | 'compliance';
+      title: string;
+      body: string;
+    }[];
   };
   steps: {
     eyebrow: string;
-    title: string;
+    titleLead: string;
+    titleAccent: string;
     lead: string;
-    items: { step: string; title: string; body: string }[];
+    items: {
+      step: string;
+      title: string;
+      body: string;
+      chip: string;
+      /** Colour of the footnote chip under each column. */
+      tone: 'neutral' | 'blue' | 'accent';
+    }[];
+    /** Step 01 visual: the sources feeding into the platform. */
+    connectSources: {
+      icon: 'contract' | 'mail' | 'support' | 'meeting' | 'system' | 'document';
+      label: string;
+    }[];
+    /** Step 02 visual: what the models do. */
+    aiCapabilities: {
+      icon: 'patterns' | 'signals' | 'risks' | 'opportunities' | 'context';
+      label: string;
+    }[];
+    /** Step 03 visual: the ranked insight list. */
+    insights: {
+      title: string;
+      sortLabel: string;
+      rows: {
+        icon: 'risk' | 'growth' | 'action' | 'improvement' | 'document';
+        title: string;
+        sub: string;
+        tag: string;
+        tone: 'risk' | 'opportunity' | 'action' | 'improvement';
+        score: string;
+      }[];
+    };
   };
   useCases: {
     eyebrow: string;
@@ -70,18 +116,6 @@ export interface Dictionary {
     badge2: string;
     badge3: string;
   };
-  pricing: {
-    eyebrow: string;
-    title: string;
-    lead: string;
-    cardTitle: string;
-    cardPrice: string;
-    cardSub: string;
-    includes: string[];
-    cta: string;
-    note: string;
-  };
-  testimonials: { eyebrow: string; title: string; lead: string };
   faq: {
     eyebrow: string;
     title: string;
@@ -123,19 +157,19 @@ export const dictionaries: Record<Lang, Dictionary> = {
       solution: 'How it works',
       useCases: 'Use cases',
       security: 'Security',
-      pricing: 'Pricing',
-      testimonials: 'Customers',
       faq: 'FAQ',
       bookDemo: 'Request a demo',
     },
     hero: {
       eyebrow: 'Intelligent data insight platform',
-      titleLead: 'Unlock valuable insight from',
-      titleAccent: 'unstructured business data.',
-      titleTail: '',
+      titleLines: [
+        [{ text: 'Turn scattered data,', tone: 'accent' }],
+        [{ text: 'into business' }],
+        [{ text: 'Intelligence' }],
+      ],
       subtitle: 'Actionable insight — in seconds.',
       description:
-        'MasterEmployee transforms unstructured business data into actionable insight. Within seconds, the platform identifies what matters and presents it through intuitive dashboards, reports and action lists — for every team that needs to see what their data is really saying.',
+        'MasterEmployee reads the contracts, emails and support cases your business already has — and shows every team what matters, in seconds.',
       primaryCta: 'Request a demo',
       secondaryCta: 'See how it works',
       trustBadge1: 'ISO 27001-2 compliant',
@@ -166,42 +200,87 @@ export const dictionaries: Record<Lang, Dictionary> = {
     },
     problem: {
       eyebrow: 'The problem',
-      title: 'Critical business insight is hidden in unstructured data.',
-      lead: 'Most companies store valuable information across operational systems, documents and communication channels. Few manage to gain a complete insight into their data to use it for business development.',
-      body: 'This information contains important signals about operational performance, customer behaviour and potential risks. But because the data is unstructured and scattered across systems, it is difficult to analyze and is rarely used effectively.',
+      titleLead: 'Your business already has the signals.',
+      titleAccent: 'They’re just buried.',
+      lead: 'Critical information is scattered across the systems your teams use every day. Individually, each source tells only part of the story.',
+      emphasisLead: 'The problem is that',
+      emphasisStrong: 'no single person — or system — sees the whole picture.',
+      coreTitle: 'Buried data',
+      coreSub: 'Scattered information = lost insight and opportunity',
+      /* Order is positional: [top, left, right, bottom]. */
+      hints: ['Opportunities missed', 'Context lost', 'Hidden signals', 'Risks unseen'],
       sources: [
-        'Customer contracts',
-        'Meeting notes',
-        'Emails & customer communication',
-        'Order and delivery documentation',
-        'Support cases & service reports',
-        'Claims and quality reports',
-        'Invoice information',
+        { icon: 'contract', title: 'Contracts', body: 'Terms, obligations and renewals' },
+        { icon: 'mail', title: 'Emails & communications', body: 'Customer requests, feedback and issues' },
+        { icon: 'support', title: 'Support cases', body: 'Tickets, chats and service reports' },
+        { icon: 'meeting', title: 'Meetings', body: 'Notes, decisions and action items' },
+        { icon: 'claim', title: 'Claims & quality', body: 'Returns, defects and investigations' },
+        { icon: 'delivery', title: 'Orders & deliveries', body: 'Purchase orders, shipments and PODs' },
+        { icon: 'invoice', title: 'Invoices', body: 'Billing, payments and adjustments' },
       ],
-      outcome:
-        'As a result, companies miss early indicators of customer churn, growth opportunities and operational issues.',
+      missedTitle: 'What gets missed',
+      missedBody: 'When data stays scattered, business-critical insights stay hidden.',
+      missedItems: [
+        { icon: 'churn', title: 'Customer churn', body: 'Early signs are missed until it’s too late.' },
+        { icon: 'revenue', title: 'Revenue opportunities', body: 'Upsell, cross-sell and retention opportunities go unnoticed.' },
+        { icon: 'ops', title: 'Operational issues', body: 'Risks and bottlenecks aren’t identified in time.' },
+        { icon: 'compliance', title: 'Contract & compliance risk', body: 'Key obligations and renewal deadlines are overlooked.' },
+      ],
     },
     steps: {
       eyebrow: 'How it works',
-      title: 'From unstructured data to business insight in three steps.',
+      titleLead: 'From unstructured data to business insight in',
+      titleAccent: 'three steps.',
       lead: 'Connect your data, let the platform analyze it, and your teams get the insight ranked by importance.',
       items: [
         {
           step: '01',
           title: 'Connect your data',
-          body: 'MasterEmployee securely connects to your contracts, meeting notes, emails, operational systems and customer documentation. We integrate with most data sources — and use robotic process automation for systems that are difficult to integrate with. Most setups take days, not months.',
+          body: 'MasterEmployee securely connects to your contracts, emails, support cases and operational systems. We integrate with most data sources and use RPA for systems that are hard to connect.',
+          chip: 'Secure. Private. Enterprise-grade.',
+          tone: 'neutral',
         },
         {
           step: '02',
           title: 'AI analyzes the information',
-          body: 'Private AI models automatically process your unstructured data — identifying patterns, signals, risks and opportunities across documents, communications and operational systems.',
+          body: 'Private AI models process your unstructured data — identifying patterns, signals, risks and opportunities across documents, communications and operational systems.',
+          chip: 'Your data stays private. Always.',
+          tone: 'blue',
         },
         {
           step: '03',
           title: 'Insight in clear dashboards',
-          body: 'Results land in intuitive dashboards and tailored reports — highlighting what matters about your customers, contracts and operations. Your teams immediately see what needs attention and where the opportunities are.',
+          body: 'Results land in intuitive dashboards and tailored reports — highlighting what matters about your customers, contracts and operations. Your teams see what needs attention and where the opportunities are.',
+          chip: 'Insight ranked by importance.',
+          tone: 'accent',
         },
       ],
+      connectSources: [
+        { icon: 'contract', label: 'Contracts' },
+        { icon: 'mail', label: 'Emails' },
+        { icon: 'support', label: 'Support cases' },
+        { icon: 'meeting', label: 'Meetings' },
+        { icon: 'system', label: 'Operational systems' },
+        { icon: 'document', label: 'Documents' },
+      ],
+      aiCapabilities: [
+        { icon: 'patterns', label: 'Identifies patterns' },
+        { icon: 'signals', label: 'Finds hidden signals' },
+        { icon: 'risks', label: 'Assesses risks' },
+        { icon: 'opportunities', label: 'Uncovers opportunities' },
+        { icon: 'context', label: 'Understands context' },
+      ],
+      insights: {
+        title: 'Top insights',
+        sortLabel: 'Ranked by importance',
+        rows: [
+          { icon: 'risk', title: 'At-risk customer', sub: 'Sunrise Industries', tag: 'Risk', tone: 'risk', score: '9.6' },
+          { icon: 'growth', title: 'Expansion opportunity', sub: 'Northwind Traders', tag: 'Opportunity', tone: 'opportunity', score: '9.1' },
+          { icon: 'action', title: 'Contract renewal', sub: 'Acme Corporation', tag: 'Action', tone: 'action', score: '8.7' },
+          { icon: 'improvement', title: 'Process inefficiency', sub: 'Order to cash', tag: 'Improvement', tone: 'improvement', score: '7.9' },
+          { icon: 'document', title: 'Compliance gap', sub: 'Data retention policy', tag: 'Risk', tone: 'risk', score: '7.3' },
+        ],
+      },
     },
     useCases: {
       eyebrow: 'Use cases',
@@ -300,29 +379,6 @@ export const dictionaries: Record<Lang, Dictionary> = {
       badge2: 'Private AI models',
       badge3: 'Isolated infrastructure',
     },
-    pricing: {
-      eyebrow: 'Fast deployment. Fixed price.',
-      title: 'Fast results with minimal effort.',
-      lead: 'Simple to use. Fast to deploy. No hidden AI processing or support costs.',
-      cardTitle: 'Included in every subscription',
-      cardPrice: 'Fixed monthly price',
-      cardSub: 'Full cost visibility — no surprises.',
-      includes: [
-        '24-hour proof-of-concept — free of charge',
-        'Full integration within a few days',
-        'Automated insight dashboards',
-        'Tailored reports for your use case',
-        'Built-in access control per user and data set',
-        'No hidden AI processing or support costs',
-      ],
-      cta: 'Request a demo',
-      note: 'Tell us what you need, show us the data — we deploy the platform to analyze it immediately.',
-    },
-    testimonials: {
-      eyebrow: 'Customers',
-      title: 'What our users actually say.',
-      lead: 'Real words from client representatives, tender professionals and customer service teams.',
-    },
     faq: {
       eyebrow: 'FAQ',
       title: 'Quick answers before you book.',
@@ -333,7 +389,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
         { q: 'How long does full integration take?', a: 'Most customers are fully integrated within a few days. Hard-to-reach systems are handled with robotic process automation if needed.' },
         { q: 'What does it cost?', a: 'A fixed monthly price with full cost visibility. No hidden AI processing fees, no per-document charges, no surprise support costs.' },
         { q: 'Which teams in our company will use it?', a: 'Any team that needs insight from unstructured data — customer service, contract and tender teams, operations, quality, finance. One platform, role-specific dashboards.' },
-        { q: 'Is the platform ISO certified?', a: 'Yes — ISO 27001-2 compliant, with detailed security documentation available on request.' },
+        { q: 'Is the platform ISO 27001-2 compliant?', a: 'Yes — ISO 27001-2 compliant, with detailed security documentation available on request.' },
       ],
     },
     cta: {
@@ -369,19 +425,19 @@ export const dictionaries: Record<Lang, Dictionary> = {
       solution: 'Slik fungerer det',
       useCases: 'Bruksområder',
       security: 'Sikkerhet',
-      pricing: 'Pris',
-      testimonials: 'Kunder',
       faq: 'FAQ',
       bookDemo: 'Be om demo',
     },
     hero: {
       eyebrow: 'Intelligent dataplattform for innsikt',
-      titleLead: 'Hent ut verdifull innsikt fra',
-      titleAccent: 'ustrukturerte bedriftsdata.',
-      titleTail: '',
+      titleLines: [
+        [{ text: 'Gjør spredte data,', tone: 'accent' }],
+        [{ text: 'om til business' }],
+        [{ text: 'Intelligence' }],
+      ],
       subtitle: 'Handlingsrettet innsikt — på sekunder.',
       description:
-        'MasterEmployee gjør ustrukturerte data om til handlingsrettet innsikt. På sekunder finner plattformen frem det som betyr noe — og presenterer det i intuitive dashboards, rapporter og handlingslister, for hvert team som trenger å forstå hva dataene egentlig sier.',
+        'MasterEmployee leser kontraktene, e-postene og sakene dere allerede har — og viser hvert team hva som betyr noe, på sekunder.',
       primaryCta: 'Be om demo',
       secondaryCta: 'Se hvordan det fungerer',
       trustBadge1: 'ISO 27001-2 sertifisert',
@@ -412,42 +468,87 @@ export const dictionaries: Record<Lang, Dictionary> = {
     },
     problem: {
       eyebrow: 'Problemet',
-      title: 'Kritisk forretningsinnsikt ligger gjemt i ustrukturerte data.',
-      lead: 'De fleste selskaper lagrer verdifull informasjon i operative systemer, dokumenter og kommunikasjonskanaler. Få klarer å få samlet innsikt og bruke den til å utvikle virksomheten.',
-      body: 'Denne informasjonen inneholder viktige signaler om operativ ytelse, kundeadferd og potensielle risikoer. Men fordi dataene er ustrukturerte og spredt på tvers av systemer, er de vanskelige å analysere og blir sjelden brukt effektivt.',
+      titleLead: 'Bedriften din har allerede signalene.',
+      titleAccent: 'De er bare begravd.',
+      lead: 'Kritisk informasjon er spredt på tvers av systemene teamene bruker hver eneste dag. Hver kilde forteller bare en del av historien.',
+      emphasisLead: 'Problemet er at',
+      emphasisStrong: 'ingen person — eller system — ser hele bildet.',
+      coreTitle: 'Begravde data',
+      coreSub: 'Spredt informasjon = tapt innsikt og tapte muligheter',
+      /* Order is positional: [top, left, right, bottom]. */
+      hints: ['Muligheter går tapt', 'Kontekst går tapt', 'Skjulte signaler', 'Risiko forblir usett'],
       sources: [
-        'Kundekontrakter',
-        'Møtenotater',
-        'E-post og kundekommunikasjon',
-        'Ordre- og leveransedokumentasjon',
-        'Support-saker og servicerapporter',
-        'Reklamasjoner og kvalitetsrapporter',
-        'Faktura-informasjon',
+        { icon: 'contract', title: 'Kontrakter', body: 'Vilkår, forpliktelser og fornyelser' },
+        { icon: 'mail', title: 'E-post & kommunikasjon', body: 'Henvendelser, tilbakemeldinger og saker' },
+        { icon: 'support', title: 'Supportsaker', body: 'Saker, chat og servicerapporter' },
+        { icon: 'meeting', title: 'Møter', body: 'Notater, beslutninger og oppgaver' },
+        { icon: 'claim', title: 'Reklamasjon & kvalitet', body: 'Returer, avvik og undersøkelser' },
+        { icon: 'delivery', title: 'Ordre & leveranser', body: 'Innkjøpsordre, forsendelser og kvitteringer' },
+        { icon: 'invoice', title: 'Fakturaer', body: 'Fakturering, betalinger og justeringer' },
       ],
-      outcome:
-        'Resultatet: selskaper går glipp av tidlige signaler om kundefrafall, vekstmuligheter og driftsproblemer.',
+      missedTitle: 'Hva som går tapt',
+      missedBody: 'Når dataene forblir spredt, forblir forretningskritisk innsikt skjult.',
+      missedItems: [
+        { icon: 'churn', title: 'Kundefrafall', body: 'Tidlige tegn oppdages først når det er for sent.' },
+        { icon: 'revenue', title: 'Inntektsmuligheter', body: 'Mersalg, kryssalg og lojalitet går ubemerket hen.' },
+        { icon: 'ops', title: 'Driftsproblemer', body: 'Risiko og flaskehalser oppdages ikke i tide.' },
+        { icon: 'compliance', title: 'Kontrakts- og etterlevelsesrisiko', body: 'Viktige forpliktelser og frister blir oversett.' },
+      ],
     },
     steps: {
       eyebrow: 'Slik fungerer det',
-      title: 'Fra ustrukturerte data til forretningsinnsikt i tre steg.',
+      titleLead: 'Fra ustrukturerte data til forretningsinnsikt i',
+      titleAccent: 'tre steg.',
       lead: 'Koble til dataene, la plattformen analysere, og teamene dine får innsikt rangert etter viktighet.',
       items: [
         {
           step: '01',
           title: 'Koble til dataene dine',
-          body: 'MasterEmployee kobler seg sikkert til kontrakter, møtenotater, e-post, operative systemer og kundedokumentasjon. Vi integrerer med de fleste datakilder — og bruker robotisert prosessautomatisering for systemer som er vanskelige å integrere med. De fleste oppsett tar dager, ikke måneder.',
+          body: 'MasterEmployee kobler seg sikkert til kontrakter, e-post, supportsaker og operative systemer. Vi integrerer med de fleste datakilder og bruker RPA for systemer som er vanskelige å koble til.',
+          chip: 'Sikkert. Privat. Bedriftsklart.',
+          tone: 'neutral',
         },
         {
           step: '02',
           title: 'KI analyserer informasjonen',
-          body: 'Private KI-modeller prosesserer ustrukturerte data automatisk — og identifiserer mønstre, signaler, risikoer og muligheter på tvers av dokumenter, kommunikasjon og operative systemer.',
+          body: 'Private KI-modeller prosesserer ustrukturerte data — og identifiserer mønstre, signaler, risikoer og muligheter på tvers av dokumenter, kommunikasjon og operative systemer.',
+          chip: 'Dataene dine forblir private. Alltid.',
+          tone: 'blue',
         },
         {
           step: '03',
           title: 'Innsikt i tydelige dashboards',
-          body: 'Resultatene presenteres i intuitive dashboards og skreddersydde rapporter — som løfter frem det som betyr noe om kunder, kontrakter og drift. Teamene dine ser umiddelbart hva som krever oppmerksomhet og hvor mulighetene ligger.',
+          body: 'Resultatene presenteres i intuitive dashboards og skreddersydde rapporter — som løfter frem det som betyr noe om kunder, kontrakter og drift. Teamene dine ser hva som krever oppmerksomhet og hvor mulighetene ligger.',
+          chip: 'Innsikt rangert etter viktighet.',
+          tone: 'accent',
         },
       ],
+      connectSources: [
+        { icon: 'contract', label: 'Kontrakter' },
+        { icon: 'mail', label: 'E-post' },
+        { icon: 'support', label: 'Supportsaker' },
+        { icon: 'meeting', label: 'Møter' },
+        { icon: 'system', label: 'Operative systemer' },
+        { icon: 'document', label: 'Dokumenter' },
+      ],
+      aiCapabilities: [
+        { icon: 'patterns', label: 'Identifiserer mønstre' },
+        { icon: 'signals', label: 'Finner skjulte signaler' },
+        { icon: 'risks', label: 'Vurderer risiko' },
+        { icon: 'opportunities', label: 'Avdekker muligheter' },
+        { icon: 'context', label: 'Forstår kontekst' },
+      ],
+      insights: {
+        title: 'Viktigste innsikt',
+        sortLabel: 'Rangert etter viktighet',
+        rows: [
+          { icon: 'risk', title: 'Kunde i faresonen', sub: 'Sunrise Industries', tag: 'Risiko', tone: 'risk', score: '9.6' },
+          { icon: 'growth', title: 'Vekstmulighet', sub: 'Northwind Traders', tag: 'Mulighet', tone: 'opportunity', score: '9.1' },
+          { icon: 'action', title: 'Kontraktsfornyelse', sub: 'Acme Corporation', tag: 'Handling', tone: 'action', score: '8.7' },
+          { icon: 'improvement', title: 'Ineffektiv prosess', sub: 'Ordre til betaling', tag: 'Forbedring', tone: 'improvement', score: '7.9' },
+          { icon: 'document', title: 'Etterlevelsesavvik', sub: 'Retningslinjer for datalagring', tag: 'Risiko', tone: 'risk', score: '7.3' },
+        ],
+      },
     },
     useCases: {
       eyebrow: 'Bruksområder',
@@ -546,29 +647,6 @@ export const dictionaries: Record<Lang, Dictionary> = {
       badge2: 'Private KI-modeller',
       badge3: 'Isolert infrastruktur',
     },
-    pricing: {
-      eyebrow: 'Rask utrulling. Fast pris.',
-      title: 'Raske resultater med minimal innsats.',
-      lead: 'Enkel å ta i bruk. Raskt utrullet. Ingen skjulte KI- eller supportkostnader.',
-      cardTitle: 'Inkludert i abonnementet',
-      cardPrice: 'Fast månedspris',
-      cardSub: 'Full kostnadsoversikt — ingen overraskelser.',
-      includes: [
-        'Gratis 24-timers proof-of-concept',
-        'Full integrasjon på få dager',
-        'Automatiske innsikts-dashboards',
-        'Skreddersydde rapporter for din case',
-        'Innebygget tilgangsstyring per bruker og datasett',
-        'Ingen skjulte KI- eller supportkostnader',
-      ],
-      cta: 'Be om demo',
-      note: 'Fortell oss hva du trenger, vis oss dataene — vi ruller ut plattformen og analyserer umiddelbart.',
-    },
-    testimonials: {
-      eyebrow: 'Kunder',
-      title: 'Hva brukerne våre faktisk sier.',
-      lead: 'Ekte ord fra kunderepresentanter, anbudsfolk og kundeservice-team.',
-    },
     faq: {
       eyebrow: 'FAQ',
       title: 'Raske svar før du bestiller.',
@@ -579,7 +657,7 @@ export const dictionaries: Record<Lang, Dictionary> = {
         { q: 'Hvor lang tid tar full integrasjon?', a: 'De fleste kunder er fullt integrert på få dager. Vanskelige systemer håndteres med robotisert prosessautomatisering ved behov.' },
         { q: 'Hva koster det?', a: 'Fast månedspris med full kostnadsoversikt. Ingen skjulte KI-prosesseringsavgifter, ingen per-dokument-kostnader, ingen overraskelser på support.' },
         { q: 'Hvilke team i selskapet bruker dette?', a: 'Alle team som trenger innsikt fra ustrukturerte data — kundeservice, kontrakts- og anbudsteam, drift, kvalitet, økonomi. Én plattform, rolle-spesifikke dashboards.' },
-        { q: 'Er plattformen ISO-sertifisert?', a: 'Ja — ISO 27001-2 sertifisert, med detaljert sikkerhetsdokumentasjon på forespørsel.' },
+        { q: 'Er plattformen ISO 27001-2-sertifisert?', a: 'Ja — ISO 27001-2 sertifisert, med detaljert sikkerhetsdokumentasjon på forespørsel.' },
       ],
     },
     cta: {
@@ -611,15 +689,3 @@ export const dictionaries: Record<Lang, Dictionary> = {
   },
 };
 
-export const testimonials: { quote_no: string; quote_en: string; role_en: string; role_no: string }[] = [
-  { quote_no: 'Vi er strålende fornøyd', quote_en: 'We are absolutely satisfied.', role_en: 'Client representative', role_no: 'Kunderepresentant' },
-  { quote_no: 'Det er veldig gøy å bruke verktøyet', quote_en: 'It is very fun to use the tool.', role_en: 'Tender client user', role_no: 'Anbudsbruker' },
-  { quote_no: 'Jeg bruker det masse. Jeg bruker det også til å få innspill og ideer når jeg skriver anbud.', quote_en: 'I use it a lot. I also use it to get input and ideas when I write tenders.', role_en: 'Tender client user', role_no: 'Anbudsbruker' },
-  { quote_no: 'Dette er mer enn det vi hadde håpet på', quote_en: 'This is more than we had hoped for.', role_en: 'Client representative', role_no: 'Kunderepresentant' },
-  { quote_no: 'Det er utrolig digg å ha et slikt verktøy', quote_en: 'It is incredibly great to have such a tool.', role_en: 'Tender professional', role_no: 'Anbudsspesialist' },
-  { quote_no: 'Ikke la konkurrentene våre få tilgang til dette verktøyet', quote_en: 'Don’t let our competitors gain access to this tool.', role_en: 'Client representative', role_no: 'Kunderepresentant' },
-  { quote_no: 'Dette er gull verd', quote_en: 'This is worth its weight in gold.', role_en: 'Customer service lead', role_no: 'Kundeservice-ansvarlig' },
-  { quote_no: 'Plattformen og tjenesten dere leverer er nesten for billig', quote_en: 'The platform and service you provide are almost too cheap.', role_en: 'Client lead', role_no: 'Kundeansvarlig' },
-  { quote_no: 'Dette er dritbra!', quote_en: 'This is really great!', role_en: 'Customer service manager', role_no: 'Kundeservice-leder' },
-  { quote_no: 'Denne løsningen er jo fantastisk!', quote_en: 'This platform is just fantastic!', role_en: 'Client user', role_no: 'Bruker' },
-];
