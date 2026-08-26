@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
-# Bootstrap script for first-time Let's Encrypt certificate acquisition.
-# Run once on a fresh EC2 host after DNS is pointed at the instance.
+# First-time Let's Encrypt certificate acquisition for masteremployee.com.
+#
+# Run once on a fresh EC2 host, after DNS for both names points at the instance
+# and ports 80/443 are open in the security group.
+#
 # Usage:
-#   ./init-letsencrypt.sh           # production certs
-#   STAGING=1 ./init-letsencrypt.sh # Let's Encrypt staging (no rate limits, untrusted cert)
+#   ./init-letsencrypt.sh            # production certificate
+#   STAGING=1 ./init-letsencrypt.sh  # staging (no rate limits, untrusted cert)
+#
+# nginx no longer needs a certificate in order to start, so there is no dummy
+# certificate step: we bring the site up on HTTP, let certbot validate over the
+# webroot, and the container switches itself to HTTPS once the cert exists.
 
 set -euo pipefail
+
+cd "$(dirname "$0")"
 
 if ! docker compose version >/dev/null 2>&1; then
   echo "Error: 'docker compose' is required." >&2
@@ -22,64 +31,60 @@ staging="${STAGING:-0}"
 if [ -d "$data_path/conf/live/$primary_domain" ]; then
   read -r -p "Existing certificate data found for $primary_domain. Replace it? (y/N) " decision
   if [ "$decision" != "y" ] && [ "$decision" != "Y" ]; then
+    echo "Leaving the existing certificate in place."
     exit 0
   fi
 fi
 
-if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/ssl-dhparams.pem" ]; then
-  echo "### Downloading recommended TLS parameters ..."
-  mkdir -p "$data_path/conf"
-  curl -fsSL https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf \
-    > "$data_path/conf/options-ssl-nginx.conf"
-  curl -fsSL https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem \
-    > "$data_path/conf/ssl-dhparams.pem"
+mkdir -p "$data_path/conf" "$data_path/www"
+
+echo "### Building and starting nginx (HTTP only) ..."
+docker compose up -d --build --force-recreate web
+
+echo "### Waiting for the ACME challenge path to answer ..."
+for _ in $(seq 1 30); do
+  if curl -fsS -o /dev/null "http://localhost/healthz"; then
+    break
+  fi
+  sleep 2
+done
+if ! curl -fsS -o /dev/null "http://localhost/healthz"; then
+  echo "Error: nginx did not come up. Check: docker compose logs web" >&2
+  exit 1
 fi
 
-echo "### Creating dummy certificate for $primary_domain ..."
-cert_path="/etc/letsencrypt/live/$primary_domain"
-mkdir -p "$data_path/conf/live/$primary_domain"
-mkdir -p "$data_path/www"
-docker compose run --rm --entrypoint "\
-  openssl req -x509 -nodes -newkey rsa:$rsa_key_size -days 1 \
-    -keyout '$cert_path/privkey.pem' \
-    -out '$cert_path/fullchain.pem' \
-    -subj '/CN=localhost'" certbot
-
-echo "### Starting nginx ..."
-docker compose up --force-recreate -d web
-
-echo "### Deleting dummy certificate for $primary_domain ..."
-docker compose run --rm --entrypoint "\
-  rm -rf /etc/letsencrypt/live/$primary_domain && \
-  rm -rf /etc/letsencrypt/archive/$primary_domain && \
-  rm -rf /etc/letsencrypt/renewal/$primary_domain.conf" certbot
-
-echo "### Requesting Let's Encrypt certificate for ${domains[*]} ..."
-domain_args=""
+domain_args=()
 for domain in "${domains[@]}"; do
-  domain_args="$domain_args -d $domain"
+  domain_args+=(-d "$domain")
 done
 
-email_arg="--email $email"
-staging_arg=""
+staging_arg=()
 if [ "$staging" != "0" ]; then
-  staging_arg="--staging"
+  staging_arg=(--staging)
 fi
 
-docker compose run --rm --entrypoint "\
-  certbot certonly --webroot -w /var/www/certbot \
-    $staging_arg \
-    $email_arg \
-    $domain_args \
-    --rsa-key-size $rsa_key_size \
-    --agree-tos \
-    --no-eff-email \
-    --force-renewal" certbot
+echo "### Requesting a certificate for ${domains[*]} ..."
+docker compose run --rm --entrypoint certbot certbot \
+  certonly --webroot -w /var/www/certbot \
+  "${staging_arg[@]}" \
+  --email "$email" \
+  "${domain_args[@]}" \
+  --rsa-key-size "$rsa_key_size" \
+  --agree-tos \
+  --no-eff-email \
+  --non-interactive
 
-echo "### Reloading nginx ..."
-docker compose exec web nginx -s reload
+echo "### Waiting for nginx to switch itself to HTTPS ..."
+for _ in $(seq 1 30); do
+  if curl -fsSk -o /dev/null "https://localhost/healthz"; then
+    break
+  fi
+  sleep 2
+done
 
-echo "### Starting certbot renewal loop ..."
+echo "### Starting the renewal loop ..."
 docker compose up -d certbot
 
+echo
 echo "### Done. https://$primary_domain should now be live."
+echo "    Verify with: curl -sSI https://$primary_domain | head -1"

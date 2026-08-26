@@ -10,12 +10,29 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
+    environment:
+      # Consumed by the image entrypoint to locate /etc/letsencrypt/live/<domain>.
+      CERT_DOMAIN: masteremployee.com
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   certbot:
     image: certbot/certbot:latest
     container_name: masteremployee-certbot
     restart: unless-stopped
+    depends_on:
+      - web
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'
+    # Renewal attempts twice a day, as Let's Encrypt recommends. nginx picks up
+    # renewed certificates on its own periodic reload, so no hook is needed here.
+    entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done;'
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
