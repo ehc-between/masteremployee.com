@@ -100,8 +100,21 @@ waits for nginx to switch to HTTPS, then starts the renewal loop.
 
 ```bash
 git pull
-docker compose up -d --build web
+docker build -t masteremployee-web:latest .
+docker compose up -d --force-recreate --no-build web
 ```
+
+`docker build` is used instead of `docker compose build` on purpose. Compose v2
+delegates builds to buildx and fails outright on a stock Amazon Linux 2023 host:
+
+```
+compose build requires buildx 0.17.0 or later
+```
+
+because Amazon's `docker` package ships without a current buildx plugin. Plain
+`docker build` works with or without it. To use compose builds anyway, install
+the plugin into `/usr/local/lib/docker/cli-plugins/docker-buildx` from
+https://github.com/docker/buildx/releases.
 
 Certificates live in `./certbot/conf` on the host and are untouched by rebuilds.
 

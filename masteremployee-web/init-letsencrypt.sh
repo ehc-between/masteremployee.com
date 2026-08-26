@@ -38,8 +38,15 @@ fi
 
 mkdir -p "$data_path/conf" "$data_path/www"
 
-echo "### Building and starting nginx (HTTP only) ..."
-docker compose up -d --build --force-recreate web
+# Build with `docker build` rather than `docker compose build`. Compose v2 routes
+# builds through buildx and hard-fails with "compose build requires buildx 0.17.0
+# or later" on stock Amazon Linux 2023, whose docker package ships without a
+# current buildx plugin. Plain `docker build` works with or without buildx.
+echo "### Building the image ..."
+docker build -t masteremployee-web:latest .
+
+echo "### Starting nginx (HTTP only) ..."
+docker compose up -d --force-recreate --no-build web
 
 echo "### Waiting for the ACME challenge path to answer ..."
 for _ in $(seq 1 30); do
