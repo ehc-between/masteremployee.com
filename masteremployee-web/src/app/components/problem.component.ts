@@ -83,6 +83,45 @@ interface Particle {
               }
             </svg>
 
+            <!-- Portrait twin of the SVG above. A viewBox cannot be swapped by
+                 media query, so the two coordinate spaces need two elements;
+                 CSS shows exactly one. Rail ids are prefixed to stay unique
+                 while both are in the DOM. -->
+            <svg class="wires wires-m" viewBox="0 0 400 520" aria-hidden="true">
+              @for (w of mobileWires; track $index) {
+                <path [attr.d]="w" />
+              }
+              @for (p of mobileParticles; track $index) {
+                <circle
+                  [attr.cx]="p.cx"
+                  [attr.cy]="p.cy"
+                  [attr.r]="p.r"
+                  [class.accent]="p.accent" />
+              }
+              @for (m of mobileMotionPaths; track $index) {
+                <path class="rail" [attr.id]="'mrail-' + $index" [attr.d]="m" />
+              }
+              @for (m of mobileMotionPaths; track $index; let i = $index) {
+                <g class="packet">
+                  <rect x="-4.5" y="-5.5" width="9" height="11" rx="2" />
+                  <path class="packet-lines" d="M-2.3 -2.4h4.6M-2.3 0h4.6M-2.3 2.4h3" />
+                  <animateMotion
+                    [attr.dur]="packetDur"
+                    [attr.begin]="i * packetStagger + 's'"
+                    repeatCount="indefinite">
+                    <mpath [attr.href]="'#mrail-' + i" />
+                  </animateMotion>
+                  <animate
+                    attributeName="opacity"
+                    values="0;1;1;0"
+                    keyTimes="0;0.12;0.72;0.95"
+                    [attr.dur]="packetDur"
+                    [attr.begin]="i * packetStagger + 's'"
+                    repeatCount="indefinite" />
+                </g>
+              }
+            </svg>
+
             @for (s of i18n.t().problem.sources; track s.title; let i = $index) {
               <article class="node" [class]="'node node-' + i">
                 <span class="node-icon">
@@ -113,6 +152,7 @@ interface Particle {
                 <div class="node-text">
                   <h3>{{ s.title }}</h3>
                   <p>{{ s.body }}</p>
+                  <span class="node-short">{{ s.short }}</span>
                 </div>
               </article>
             }
@@ -196,6 +236,9 @@ interface Particle {
     .canvas { position: relative; aspect-ratio: 1200 / 540; }
 
     .wires { position: absolute; inset: 0; width: 100%; height: 100%; }
+    /* Exactly one of the two coordinate spaces is ever live. */
+    .wires-m { display: none; }
+    .node-short { display: none; }
     .wires path {
       fill: none;
       /* Tied to --ink-muted rather than a border token so the wires keep the
@@ -396,8 +439,92 @@ interface Particle {
       .missed { grid-template-columns: 1fr; gap: 20px; padding: 24px; }
       .missed-item { padding-left: 0; border-left: 0; }
     }
+    /* ---------- PORTRAIT RING ---------- */
+    /* Below 560px the landscape ring is unreadable, but flattening it to a card
+       list (the 560-860px fallback above) loses the point of the figure: seven
+       scattered sources converging on one buried core. So the ring is rebuilt in
+       a 400×700 portrait coordinate space using the same technique as the
+       desktop one — chips placed by percentage over a matching viewBox — with
+       three chips down each side and Invoices at the foot. */
     @media (max-width: 560px) {
-      .canvas { grid-template-columns: 1fr; }
+      /* The cap keeps the figure from becoming absurdly tall on a 560px screen,
+         and putting it on .diagram (not .canvas) means cqw resolves against the
+         canvas itself, so every chip scales with the figure rather than the page. */
+      .diagram {
+        container-type: inline-size;
+        max-width: 400px;
+        margin: 0 auto 24px;
+      }
+      .canvas {
+        display: block;
+        aspect-ratio: 400 / 520;
+      }
+      .wires { display: none; }
+      .wires-m { display: block; }
+
+      /* Chips: icon stacked over a one-word label, centred. */
+      .node {
+        position: absolute;
+        width: 23%;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1.6cqw;
+        padding: 2.2cqw 1.4cqw;
+        border-radius: 3cqw;
+        border-width: 1px;
+      }
+      .node-text h3, .node-text p { display: none; }
+      .node-short {
+        display: block;
+        font-size: 3.1cqw; font-weight: 700; line-height: 1.2;
+        letter-spacing: -0.01em; color: var(--ink);
+        overflow-wrap: anywhere;
+      }
+      .node-icon {
+        width: 7.4cqw; height: 7.4cqw; border-radius: 2.2cqw;
+      }
+      .node-icon svg { width: 4.4cqw; height: 4.4cqw; }
+
+      /* Percentages are the viewBox coordinates over 400×520, so the chips sit
+         on the wire endpoints exactly as they do in the landscape figure. */
+      .node-0 { left: 1%;  top: 2.5%;  width: 23%; }
+      .node-1 { left: 1%;  top: 43.2%; width: 23%; }
+      .node-2 { left: 1%;  top: 71%;   width: 23%; }
+      .node-3 { left: 76%; top: 2.5%;  width: 23%; }
+      .node-4 { left: 76%; top: 43.2%; width: 23%; }
+      .node-5 { left: 76%; top: 71%;   width: 23%; }
+      .node-6 { left: 38.5%; top: 86%; width: 23%; }
+
+      /* Core keeps the mark and title only: at 34% of a 360px screen there is
+         no room for the sub-line, and it restates the section lead anyway. */
+      .core {
+        /* The 560-860px fallback un-positions this; the ring needs it back. */
+        position: absolute;
+        left: 33%; top: 43.75%; width: 34%;
+        flex-direction: column; gap: 1.4cqw;
+        text-align: center;
+        padding: 2.4cqw 1.6cqw;
+        border-width: 2px; border-radius: 3cqw;
+      }
+      .core-mark svg { width: 5.6cqw; height: 5.6cqw; }
+      /* Sized so the longest title stays on one line — Norwegian's "BEGRAVDE
+         DATA" wrapped at 3.4cqw, and the taller core then collided with the
+         hint pill below it, whose position is a fixed percentage. */
+      .core-title { font-size: 3cqw; letter-spacing: 0.04em; }
+      .core-sub { display: none; }
+
+      /* Only the vertical pair survives: the side pills would sit on top of the
+         middle chips at this width. */
+      .hint {
+        display: block;
+        font-size: 2.9cqw;
+        padding: 1.4cqw 2.4cqw;
+        border-width: 1px;
+      }
+      .hint-0 { left: 50%; top: 36%; transform: translateX(-50%); }
+      .hint-3 { left: 50%; top: 60%; transform: translateX(-50%); }
+      .hint-1, .hint-2 { display: none; }
     }
   `],
 })
@@ -407,6 +534,36 @@ export class ProblemComponent {
   /** How long one packet takes to travel its rail, and the gap between launches. */
   readonly packetDur = '4.2s';
   readonly packetStagger = 0.6;
+
+  /**
+   * Portrait counterparts of `wires` / `motionPaths`, in the narrow-screen
+   * SVG's 400×520 viewBox. Same seven sources ringing the same core, re-laid
+   * for a tall canvas: three chips down each side, Invoices at the foot.
+   *
+   * 520 rather than something taller is deliberate — the rows sit just clear
+   * of the cloud, which keeps the figure compact without flattening the wires
+   * into near-horizontal stubs.
+   */
+  readonly mobileWires = [
+    'M96,48 C130,80 152,145 168,220',
+    'M96,260 C112,257 120,259 128,261',
+    'M96,404 C128,378 152,335 168,300',
+    'M304,48 C270,80 248,145 232,220',
+    'M304,260 C288,257 280,259 272,261',
+    'M304,404 C272,378 248,335 232,300',
+    'M200,447 C200,415 200,375 200,302',
+  ];
+
+  /** Continued into the core at (200, 260), same rationale as `motionPaths`. */
+  readonly mobileMotionPaths = [
+    'M96,48 C130,80 152,145 168,220 S196,248 200,260',
+    'M96,260 C112,257 120,259 128,261 S180,260 200,260',
+    'M96,404 C128,378 152,335 168,300 S196,272 200,260',
+    'M304,48 C270,80 248,145 232,220 S204,248 200,260',
+    'M304,260 C288,257 280,259 272,261 S220,260 200,260',
+    'M304,404 C272,378 248,335 232,300 S204,272 200,260',
+    'M200,447 C200,415 200,375 200,302 S200,280 200,260',
+  ];
 
   /** Source card → cloud edge. Coordinates match the SVG's 1200×540 viewBox. */
   readonly wires = [
@@ -438,21 +595,35 @@ export class ProblemComponent {
    * Deterministic cloud — a seeded LCG rather than Math.random so the markup is
    * stable between renders and the dots never reshuffle on change detection.
    */
-  readonly particles: Particle[] = ProblemComponent.buildCloud();
+  readonly particles: Particle[] = ProblemComponent.buildCloud(600, 278, 205, 112, 280);
 
-  private static buildCloud(): Particle[] {
+  /**
+   * The portrait cloud is a separate, smaller field: reusing the landscape one
+   * would squash 280 dots sized for a 1200-wide space into a 400-wide one, so
+   * they read as a solid smear rather than scatter.
+   */
+  readonly mobileParticles: Particle[] = ProblemComponent.buildCloud(200, 260, 138, 88, 230, 0.6);
+
+  private static buildCloud(
+    cx: number,
+    cy: number,
+    rx: number,
+    ry: number,
+    count: number,
+    scale = 1,
+  ): Particle[] {
     let seed = 20260826;
     const rand = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
 
     const points: Particle[] = [];
-    for (let i = 0; i < 280; i++) {
+    for (let i = 0; i < count; i++) {
       const angle = rand() * Math.PI * 2;
       // Bias toward the centre so the cloud reads dense in the middle.
       const spread = Math.pow(rand(), 0.55);
       points.push({
-        cx: +(600 + Math.cos(angle) * spread * 205).toFixed(1),
-        cy: +(278 + Math.sin(angle) * spread * 112).toFixed(1),
-        r: +(1.3 + rand() * 2).toFixed(2),
+        cx: +(cx + Math.cos(angle) * spread * rx).toFixed(1),
+        cy: +(cy + Math.sin(angle) * spread * ry).toFixed(1),
+        r: +((1.3 + rand() * 2) * scale).toFixed(2),
         accent: rand() < 0.22,
       });
     }

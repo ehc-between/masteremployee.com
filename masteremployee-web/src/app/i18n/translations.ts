@@ -48,6 +48,11 @@ export interface Dictionary {
       icon: 'contract' | 'mail' | 'support' | 'meeting' | 'claim' | 'delivery' | 'invoice';
       title: string;
       body: string;
+      /**
+       * One or two words for the narrow-screen ring, where a chip is ~75px wide
+       * and `title` would wrap three deep. Never shown above 560px.
+       */
+      short: string;
     }[];
     missedTitle: string;
     missedBody: string;
@@ -210,13 +215,13 @@ export const dictionaries: Record<Lang, Dictionary> = {
       /* Order is positional: [top, left, right, bottom]. */
       hints: ['Opportunities missed', 'Context lost', 'Hidden signals', 'Risks unseen'],
       sources: [
-        { icon: 'contract', title: 'Contracts', body: 'Terms, obligations and renewals' },
-        { icon: 'mail', title: 'Emails & communications', body: 'Customer requests, feedback and issues' },
-        { icon: 'support', title: 'Support cases', body: 'Tickets, chats and service reports' },
-        { icon: 'meeting', title: 'Meetings', body: 'Notes, decisions and action items' },
-        { icon: 'claim', title: 'Claims & quality', body: 'Returns, defects and investigations' },
-        { icon: 'delivery', title: 'Orders & deliveries', body: 'Purchase orders, shipments and PODs' },
-        { icon: 'invoice', title: 'Invoices', body: 'Billing, payments and adjustments' },
+        { icon: 'contract', title: 'Contracts', body: 'Terms, obligations and renewals', short: 'Contracts' },
+        { icon: 'mail', title: 'Emails & communications', body: 'Customer requests, feedback and issues', short: 'Emails' },
+        { icon: 'support', title: 'Support cases', body: 'Tickets, chats and service reports', short: 'Support' },
+        { icon: 'meeting', title: 'Meetings', body: 'Notes, decisions and action items', short: 'Meetings' },
+        { icon: 'claim', title: 'Claims & quality', body: 'Returns, defects and investigations', short: 'Claims' },
+        { icon: 'delivery', title: 'Orders & deliveries', body: 'Purchase orders, shipments and PODs', short: 'Orders' },
+        { icon: 'invoice', title: 'Invoices', body: 'Billing, payments and adjustments', short: 'Invoices' },
       ],
       missedTitle: 'What gets missed',
       missedBody: 'When data stays scattered, business-critical insights stay hidden.',
@@ -478,13 +483,13 @@ export const dictionaries: Record<Lang, Dictionary> = {
       /* Order is positional: [top, left, right, bottom]. */
       hints: ['Muligheter går tapt', 'Kontekst går tapt', 'Skjulte signaler', 'Risiko forblir usett'],
       sources: [
-        { icon: 'contract', title: 'Kontrakter', body: 'Vilkår, forpliktelser og fornyelser' },
-        { icon: 'mail', title: 'E-post & kommunikasjon', body: 'Henvendelser, tilbakemeldinger og saker' },
-        { icon: 'support', title: 'Supportsaker', body: 'Saker, chat og servicerapporter' },
-        { icon: 'meeting', title: 'Møter', body: 'Notater, beslutninger og oppgaver' },
-        { icon: 'claim', title: 'Reklamasjon & kvalitet', body: 'Returer, avvik og undersøkelser' },
-        { icon: 'delivery', title: 'Ordre & leveranser', body: 'Innkjøpsordre, forsendelser og kvitteringer' },
-        { icon: 'invoice', title: 'Fakturaer', body: 'Fakturering, betalinger og justeringer' },
+        { icon: 'contract', title: 'Kontrakter', body: 'Vilkår, forpliktelser og fornyelser', short: 'Kontrakter' },
+        { icon: 'mail', title: 'E-post & kommunikasjon', body: 'Henvendelser, tilbakemeldinger og saker', short: 'E-post' },
+        { icon: 'support', title: 'Supportsaker', body: 'Saker, chat og servicerapporter', short: 'Support' },
+        { icon: 'meeting', title: 'Møter', body: 'Notater, beslutninger og oppgaver', short: 'Møter' },
+        { icon: 'claim', title: 'Reklamasjon & kvalitet', body: 'Returer, avvik og undersøkelser', short: 'Reklamasjon' },
+        { icon: 'delivery', title: 'Ordre & leveranser', body: 'Innkjøpsordre, forsendelser og kvitteringer', short: 'Ordre' },
+        { icon: 'invoice', title: 'Fakturaer', body: 'Fakturering, betalinger og justeringer', short: 'Fakturaer' },
       ],
       missedTitle: 'Hva som går tapt',
       missedBody: 'Når dataene forblir spredt, forblir forretningskritisk innsikt skjult.',
