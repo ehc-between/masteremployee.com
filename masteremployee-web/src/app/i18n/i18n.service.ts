@@ -30,14 +30,18 @@ export class I18nService {
     this._lang.set(this._lang() === 'en' ? 'no' : 'en');
   }
 
+  /**
+   * English is the product default. The browser's language is deliberately not
+   * consulted: a Norwegian-locale visitor was landing on the NO copy before
+   * seeing the site is bilingual, and the audience is not locale-bound. Only an
+   * explicit choice made with the EN/NO switch is honoured.
+   */
   private detectInitial(): Lang {
     if (typeof window === 'undefined') return 'en';
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY) as Lang | null;
       if (stored === 'en' || stored === 'no') return stored;
     } catch {}
-    const nav = (navigator?.language || '').toLowerCase();
-    if (nav.startsWith('nb') || nav.startsWith('no') || nav.startsWith('nn')) return 'no';
     return 'en';
   }
 }
